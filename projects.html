@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>the slop museum · hack//ops</title>
+<meta name="description" content="Every project built at SLOPATHON OP001. The gloriously cursed, over-engineered, useless-but-working archive from HACK//OPS Karlsruhe." />
+<meta property="og:title" content="the slop museum · op001 archive" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="Every gloriously cursed prototype built at SLOPATHON OP001, in one place." />
+<meta property="og:image" content="https://hackops.tech/assets/op002-slopathon.jpg" />
+<meta property="og:url" content="https://hackops.tech/projects.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Press+Start+2P&family=Hanken+Grotesk:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="preload" href="assets/good-times.otf" as="font" type="font/otf" crossorigin />
+<link rel="stylesheet" href="projects.css?v=1" />
+<script>
+  /* apply saved theme before first paint — shared key with the main desktop */
+  (function () {
+    try {
+      var t = localStorage.getItem('hackops-theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+
+<div class="bar">
+  <a class="back" href="/">‹ back to desktop</a>
+  <a class="brand" href="/">hack//ops</a>
+  <span class="spacer"></span>
+  <span class="tag">op001 · the archive</span>
+  <button class="toggle" id="themeToggle" title="toggle lights" aria-label="toggle dark mode">◐</button>
+</div>
+
+<header class="hero">
+  <p class="kicker">slopathon · op001 · karlsruhe</p>
+  <h1>the slop museum</h1>
+  <p>Every project built at SLOPATHON OP001 — the gloriously cursed, over-engineered,
+     useless-but-working prototypes. Built in one room, on purpose, the wrong way.
+     Click any window to open the exhibit.</p>
+  <div class="meta">
+    <span class="count" id="count"><b>…</b> exhibits</span>
+    <span>·</span>
+    <a href="https://github.com/HACK-OPS-KA/SLOPATHON" target="_blank" rel="noopener">source repo ↗</a>
+  </div>
+</header>
+
+<div class="filter">
+  <input id="filter" type="search" placeholder="filter by name, team, keyword…" autocomplete="off" />
+</div>
+
+<main class="grid" id="grid" aria-live="polite"></main>
+
+<footer>
+  the archive rebuilds itself whenever a submission is merged ·
+  <a href="https://github.com/HACK-OPS-KA/SLOPATHON" target="_blank" rel="noopener">HACK-OPS-KA/SLOPATHON</a>
+</footer>
+
+<!-- exhibit modal -->
+<div class="modal-back" id="modalBack" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="tbar"><span class="t" id="mTitle">exhibit</span><button class="x" id="mClose" aria-label="close">×</button></div>
+    <div class="mbody" id="mBody"></div>
+  </div>
+</div>
+
+<script src="projects.js?v=1"></script>
+</body>
+</html>
