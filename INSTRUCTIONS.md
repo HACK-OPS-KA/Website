@@ -154,10 +154,14 @@ The four A records are GitHub's shared Pages addresses and are the same for ever
 GitHub Pages site. GitHub decides which repo answers by reading the `CNAME` file
 in the repo, which is why that file must stay in place.
 
-The `www` CNAME is different: it points at a specific organisation. Since the site
-moved from the `hackops-ka` org to `HACK-OPS-KA`, this record has to be updated to
-`hack-ops-ka.github.io`. Until it is, `www.hackops.tech` will not resolve to the
-site while the apex `hackops.tech` works fine.
+The `www` CNAME currently still points at `hackops-ka.github.io`, the organisation
+the site used to live in. This works today, because GitHub routes Pages requests by
+the `Host` header rather than by which `github.io` name the CNAME resolves to, and
+`www.hackops.tech` redirects to the apex correctly.
+
+It is still worth updating to `hack-ops-ka.github.io` as hygiene, so the record
+matches reality and nothing depends on the old organisation continuing to exist.
+This is not urgent and nothing is broken until then.
 
 HTTPS is enforced. The certificate is issued and renewed by GitHub automatically
 and covers both the apex and `www`.
@@ -311,9 +315,8 @@ means old code.
 against production. Check that `hackops.tech` is in the Firebase Authentication
 authorized domains list, then sign out and back in.
 
-**`www.hackops.tech` does not load but `hackops.tech` does.** The `www` CNAME still
-points at the old organisation. Update it to `hack-ops-ka.github.io` at get.tech.
-See section 5.
+**`www.hackops.tech` does not load but `hackops.tech` does.** Check the `www` CNAME
+at get.tech. It should point at `hack-ops-ka.github.io`. See section 5.
 
 **The vote widget shows the wrong state.** The countdown is cosmetic and follows
 the visitor's clock, but the actual open and close is enforced by Firestore. If
