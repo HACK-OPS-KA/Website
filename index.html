@@ -67,7 +67,7 @@
     <section class="stop-home" data-stop="home" data-label="hack//ops"
              data-x="6000" data-y="5400" data-vw="1600" data-vh="1300" data-bearing="0"
              data-cx="6000" data-cy="5508"
-             data-cx-m="6000" data-cy-m="5905" data-vw-m="680" data-vh-m="1720">
+             data-cx-m="6000" data-cy-m="5807" data-vw-m="680" data-vh-m="1450">
       <p class="home-tag">karlsruhe builds here.</p>
       <h1 class="home-title">hack<b>//</b>ops</h1>
       <p class="home-blurb">
@@ -243,23 +243,10 @@
          instead of sitting beside the title -->
     <section class="win pyr-win" style="--tbar: var(--purple)" data-interactive
              data-x="6520" data-y="5640" data-rot="-3"
-             data-x-m="6000" data-y-m="6200" data-rot-m="0">
+             data-x-m="6000" data-y-m="6262" data-rot-m="0">
       <div class="win-title"><span class="t">pyramid1.fbx</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
       <div class="win-body">
         <pre id="ascii-pyr" aria-hidden="true"></pre>
-      </div>
-    </section>
-
-    <!-- op//002 vote: content is filled in by vote.js once Firebase
-         loads. Same right-column stack as the signup card and the
-         pyramid on desktop; continues the same stack below the
-         pyramid on phones. -->
-    <section class="win vote-win" style="--tbar: var(--gold)"
-             data-x="6520" data-y="6058" data-rot="2"
-             data-x-m="6000" data-y-m="6512" data-rot-m="0">
-      <div class="win-title"><span class="t">op002_vote.exe</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
-      <div class="win-body" id="vote-body">
-        <p class="mono">status: loading...</p>
       </div>
     </section>
 
@@ -307,10 +294,6 @@
   <button class="wordmark" type="button" data-interactive
           onclick="hackops.flyTo('home')">hack<b>//</b>ops</button>
   <nav id="stops-nav" aria-label="Stops" data-interactive></nav>
-  <a class="chip cta-luma" data-interactive href="https://luma.com/zxavzf5b"
-     target="_blank" rel="noopener">slopathon signup</a>
-  <a class="chip gh-link" data-interactive href="https://github.com/HACK-OPS-KA/SLOPATHON"
-     target="_blank" rel="noopener">github</a>
   <button id="modebtn" class="mode-toggle" type="button" data-interactive
           aria-label="Toggle dark mode"><span class="dot" aria-hidden="true"></span><span id="modelbl">dark mode</span></button>
 </header>
@@ -329,27 +312,6 @@
   <button id="lvl" type="button" title="Level the camera">&deg;</button>
 </div>
 
-<!-- op//002 vote confirmation: a fixed overlay, NOT part of the camera
-     world, so it is always full and legible regardless of zoom -- this
-     is what makes it "more visible on mobile" for free. Pick a team,
-     see the confirmation state, only then does the vote get cast. -->
-<div id="vote-modal-backdrop" class="vote-modal-backdrop" data-interactive>
-  <div class="win vote-modal" style="--tbar: var(--gold)" role="dialog" aria-modal="true" aria-labelledby="vote-modal-title">
-    <div class="win-title">
-      <span class="t" id="vote-modal-title">op002_confirm.exe</span>
-      <span class="b" id="vote-modal-close" role="button" tabindex="0" aria-label="Close">&times;</span>
-    </div>
-    <div class="win-body">
-      <p class="mono" id="vote-modal-step">pick a team</p>
-      <div class="vote-modal-teams" id="vote-modal-teams"></div>
-      <button class="vote-modal-confirm" id="vote-modal-confirm" type="button" disabled>confirm vote</button>
-      <button class="vote-modal-cancel" id="vote-modal-cancel" type="button">cancel</button>
-      <p class="vote-sub" id="vote-modal-msg"></p>
-    </div>
-  </div>
-</div>
-
 <script src="engine.js?v=desktop-5"></script>
-<script type="module" src="vote.js?v=3"></script>
 </body>
 </html>

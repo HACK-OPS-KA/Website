@@ -151,14 +151,7 @@ header {
   transition: color .15s, border-color .15s, background .15s;
 }
 a.chip { text-decoration: none; display: inline-block; }
-.chip.cta-luma {
-  background: var(--pink);
-  border-color: var(--pink);
-  color: #fff;
-}
-.chip.cta-luma:hover { filter: brightness(1.08); color: #fff; }
 .chip:hover { border-color: var(--ink-2); color: var(--ink-body); }
-.gh-link { display: inline-block; }
 .chip.on {
   background: var(--ink-body);
   border-color: var(--ink-body);
@@ -813,7 +806,6 @@ noscript .ns {
 @media (max-width: 640px) {
   .wordmark { font-size: 13px; }
   .chip { padding: 5px 10px; font-size: 10px; }
-  .gh-link { display: none; }
   #hud { font-size: 9px; }
 
   /* portrait home: the hero column narrows from 1500 to 560 world

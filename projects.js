@@ -6,6 +6,38 @@
   var REMOTE = 'https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects.json';
   var LOCAL = 'projects.json';
 
+  // final op//002 vote result, keyed by project slug. This lives here rather
+  // than in projects.json because that file is generated in the SLOPATHON
+  // repo and loaded remote-first, so any field added to it gets overwritten
+  // on the next regeneration.
+  var FINAL_VOTES = {
+    'terminal-arcade': 5,
+    'sloppy-keyboard': 3,
+    'TokLock': 3,
+    'calendar-council': 2,
+    'cursed_minesweeper': 2,
+    'gaslight-gatekeep-grandmaster': 2,
+    'screamy-bird': 2,
+    'slopario': 1,
+    'chladni_clock': 0,
+    'cursor-distorter': 0,
+    'silence-enforcer': 0,
+    'the-weight-bay': 0
+  };
+
+  // most votes first. Ties fall back to title so the order is stable, and
+  // anything with no recorded result (a project added after the vote) sorts
+  // to the end rather than silently landing among the winners.
+  function byFinalPlace(a, b) {
+    var va = FINAL_VOTES[a.slug];
+    var vb = FINAL_VOTES[b.slug];
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    if (vb !== va) return vb - va;
+    return String(a.title || a.slug).localeCompare(String(b.title || b.slug));
+  }
+
   var grid = document.getElementById('grid');
   var countEl = document.getElementById('count');
   var filterEl = document.getElementById('filter');
@@ -31,7 +63,7 @@
     fetchJson(REMOTE)
       .catch(function () { return fetchJson(LOCAL); })
       .then(function (data) {
-        ALL = (data && data.projects) || [];
+        ALL = ((data && data.projects) || []).slice().sort(byFinalPlace);
         render(ALL);
         countEl.innerHTML = '<b>' + ALL.length + '</b> exhibit' + (ALL.length === 1 ? '' : 's');
       })
