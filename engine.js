@@ -57,12 +57,16 @@
     const y = (mobile && el.dataset.cyM) || el.dataset.cy || el.dataset.y;
     const vw = (mobile && el.dataset.vwM) || el.dataset.vw || 800;
     const vh = (mobile && el.dataset.vhM) || el.dataset.vh || 600;
+    // a tilted camera costs readable width on a phone, so stops can
+    // level themselves below the breakpoint with data-bearing-m
+    const bearing = (mobile && el.dataset.bearingM != null)
+      ? el.dataset.bearingM : (el.dataset.bearing || 0);
     return {
       el,
       id: el.dataset.stop,
       label: el.dataset.label || el.dataset.stop,
       x: +x, y: +y, vw: +vw, vh: +vh,
-      bearing: (+(el.dataset.bearing || 0)) * Math.PI / 180,
+      bearing: (+bearing) * Math.PI / 180,
       s: 1
     };
   };
@@ -201,7 +205,13 @@
   }
   function updateNav() {
     const k = Math.round(Math.max(0, Math.min(stops.length - 1, u)));
-    chips.forEach((c, i) => c.classList.toggle('on', tourMode && i === k));
+    chips.forEach((c, i) => {
+      const on = tourMode && i === k;
+      c.classList.toggle('on', on);
+      // screen readers get the same "you are here" the highlight gives
+      if (on) c.setAttribute('aria-current', 'true');
+      else c.removeAttribute('aria-current');
+    });
   }
 
   /* ---------------- flight ---------------- */
@@ -258,79 +268,226 @@
       targetU + e.deltaY * 0.0011));
   }, { passive: false });
 
-  function freeZoom(f, px, py) {
-    tourMode = false;
-    flight = null;
+  const clampScale = s => Math.max(0.01, Math.min(160, s));
+
+  // the world point currently under a screen point
+  function toWorld(px, py) {
     const cx = innerWidth / 2, cy = innerHeight / 2;
     const cos = Math.cos(cam.r), sin = Math.sin(cam.r);
     const dx = px - cx, dy = py - cy;
-    const wx = cam.x + (dx * cos + dy * sin) / cam.s;
-    const wy = cam.y + (-dx * sin + dy * cos) / cam.s;
-    const ns = Math.max(0.01, Math.min(160, cam.s * f));
-    cam.x = wx - (dx * cos + dy * sin) / ns;
-    cam.y = wy - (-dx * sin + dy * cos) / ns;
-    cam.s = ns;
+    return [cam.x + (dx * cos + dy * sin) / cam.s,
+            cam.y + (-dx * sin + dy * cos) / cam.s];
+  }
+  // move the camera so world point w ends up under screen point px,py
+  function anchor(w, px, py) {
+    const cx = innerWidth / 2, cy = innerHeight / 2;
+    const cos = Math.cos(cam.r), sin = Math.sin(cam.r);
+    const dx = px - cx, dy = py - cy;
+    cam.x = w[0] - (dx * cos + dy * sin) / cam.s;
+    cam.y = w[1] - (-dx * sin + dy * cos) / cam.s;
   }
 
-  // drag pan / touch swipe
-  let pDown = null, moved = false;
-  const pts = new Map();
-  let pinch0 = 0, pinchS0 = 1;
+  function freeZoom(f, px, py) {
+    tourMode = false;
+    flight = null;
+    const w = toWorld(px, py);
+    cam.s = clampScale(cam.s * f);
+    anchor(w, px, py);
+  }
+
+  /* ---------------- pointer gestures ----------------
+     One rule decides the shape of all of this: anything using two
+     fingers belongs to the camera, no matter what is underneath them.
+     The old handler dropped every pointer that landed on an element
+     marked data-interactive, so on a phone, where a single card fills
+     the screen, the second finger of a pinch was usually never tracked
+     and the pinch quietly did nothing at all. Single finger drags now
+     pan from anywhere too; the click that a drag would otherwise fire
+     is suppressed below, which keeps buttons tappable without making
+     the rest of a card dead to the touch. */
+  const pts = new Map();       // live pointers: id -> [x, y]
+  let pDown = null;            // the one-finger gesture in progress
+  let pinch = null;            // the two-finger gesture in progress
+  let pinched = false;         // this touch has zoomed; no swipe, no tap
+  let suppressClick = false;   // a drag or pinch ended on a clickable thing
+  let nativeGesture = false;   // safari is driving the zoom, stand down
+  let lastTap = { t: 0, x: 0, y: 0 };
+  let lastTouchZoom = 0;
+
+  const two = () => [...pts.values()].slice(0, 2);
+  const midOf = p => [(p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2];
+  const spanOf = p => Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]);
+
+  function startPinch() {
+    const p = two();
+    const m = midOf(p);
+    pinch = { d0: spanOf(p), s0: cam.s, w: toWorld(m[0], m[1]) };
+  }
+  function movePinch() {
+    if (nativeGesture || !pinch || pinch.d0 <= 0) return;
+    const p = two();
+    const m = midOf(p);
+    tourMode = false;
+    flight = null;
+    pinched = true;
+    suppressClick = true;
+    dismissHint();
+    cam.s = clampScale(pinch.s0 * spanOf(p) / pinch.d0);
+    // whatever the fingers grabbed stays under the fingers: this is
+    // what makes the gesture feel like moving paper instead of turning
+    // a zoom knob, and it gives two finger panning for free
+    anchor(pinch.w, m[0], m[1]);
+  }
 
   stage.addEventListener('pointerdown', e => {
-    if (e.target.closest('[data-interactive]')) return;
-    stage.setPointerCapture(e.pointerId);
     pts.set(e.pointerId, [e.clientX, e.clientY]);
-    if (pts.size === 2) {
-      const [a, b] = [...pts.values()];
-      pinch0 = Math.hypot(a[0] - b[0], a[1] - b[1]);
-      pinchS0 = cam.s;
+    if (pts.size === 2) { startPinch(); pDown = null; return; }
+    if (pts.size > 2) return;
+    pinched = false;
+    suppressClick = false;   // never let a stale flag eat a real tap
+    // capturing a pointer that started on a link retargets its click to
+    // the stage, so only non-interactive drags are captured
+    if (!e.target.closest('[data-interactive]')) {
+      try { stage.setPointerCapture(e.pointerId); } catch (err) {}
     }
-    pDown = { x: e.clientX, y: e.clientY, t: performance.now() };
-    moved = false;
+    pDown = { id: e.pointerId, x: e.clientX, y: e.clientY,
+              t: performance.now(), moved: false };
   });
+
   stage.addEventListener('pointermove', e => {
     if (!pts.has(e.pointerId)) return;
     const prev = pts.get(e.pointerId);
     pts.set(e.pointerId, [e.clientX, e.clientY]);
-    if (pts.size === 2) {
-      const [a, b] = [...pts.values()];
-      const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
-      if (pinch0 > 0) {
-        tourMode = false;
-        cam.s = Math.max(0.01, Math.min(160, pinchS0 * d / pinch0));
-      }
-      moved = true;
+
+    if (pts.size >= 2) {
+      if (!pinch) startPinch();
+      movePinch();
       return;
     }
-    const dx = e.clientX - prev[0], dy = e.clientY - prev[1];
-    if (Math.abs(e.clientX - pDown.x) + Math.abs(e.clientY - pDown.y) > 6) moved = true;
-    if (moved) {
-      dismissHint();
-      tourMode = false;
-      flight = null;
-      const cos = Math.cos(cam.r), sin = Math.sin(cam.r);
-      cam.x -= (dx * cos + dy * sin) / cam.s;
-      cam.y -= (-dx * sin + dy * cos) / cam.s;
+    if (!pDown || e.pointerId !== pDown.id) return;
+    if (Math.abs(e.clientX - pDown.x) + Math.abs(e.clientY - pDown.y) > 6) {
+      pDown.moved = true;
+      suppressClick = true;
     }
+    if (!pDown.moved) return;
+    dismissHint();
+    tourMode = false;
+    flight = null;
+    const dx = e.clientX - prev[0], dy = e.clientY - prev[1];
+    const cos = Math.cos(cam.r), sin = Math.sin(cam.r);
+    cam.x -= (dx * cos + dy * sin) / cam.s;
+    cam.y -= (-dx * sin + dy * cos) / cam.s;
   });
-  stage.addEventListener('pointerup', e => {
+
+  function endPointer(e, cancelled) {
     pts.delete(e.pointerId);
-    if (!pDown) return;
+    try { stage.releasePointerCapture(e.pointerId); } catch (err) {}
+    if (pts.size < 2) pinch = null;
+
+    // lifting one finger of a pinch: rebase the survivor as a fresh
+    // drag, or the world jumps by the whole distance between fingers
+    if (pts.size === 1) {
+      const [id, p] = [...pts.entries()][0];
+      pDown = { id, x: p[0], y: p[1], t: performance.now(), moved: true };
+      return;
+    }
+    if (pts.size > 0 || !pDown || cancelled) { pDown = null; return; }
+
     const dt = performance.now() - pDown.t;
     const dx = e.clientX - pDown.x, dy = e.clientY - pDown.y;
-    // quick vertical swipe on touch: advance the tour
-    if (coarse && dt < 500 && Math.abs(dy) > 60 && Math.abs(dy) > Math.abs(dx)) {
+    const adx = Math.abs(dx), ady = Math.abs(dy);
+
+    // a flick advances the tour, a drag does not. The old test caught
+    // any vertical movement over 60px inside half a second, so pans
+    // routinely teleported the camera to another stop by accident.
+    if (coarse && !pinched && dt < 400 && ady > 80 &&
+        ady > adx * 1.6 && ady / dt > 0.3) {
       nextStop(dy < 0 ? 1 : -1);
+    } else if (coarse && !pinched && !pDown.moved &&
+               !e.target.closest('[data-interactive]')) {
+      // double tap to zoom, the touch equivalent of double click
+      const now = performance.now();
+      if (now - lastTap.t < 320 &&
+          Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 44) {
+        freeZoom(2, e.clientX, e.clientY);
+        lastTap.t = 0;
+        lastTouchZoom = now;
+        suppressClick = true;
+      } else {
+        lastTap = { t: now, x: e.clientX, y: e.clientY };
+      }
     }
     pDown = null;
-  });
-  stage.addEventListener('pointercancel', e => pts.delete(e.pointerId));
+  }
+  stage.addEventListener('pointerup', e => endPointer(e, false));
+  stage.addEventListener('pointercancel', e => endPointer(e, true));
 
-  // double click zooms in, shift+double click zooms out
+  // a drag that started on a button must not also press it
+  stage.addEventListener('click', e => {
+    if (!suppressClick) return;
+    suppressClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* Safari runs its own pinch on top of the pointer stream and zooms
+     the whole page with it, ignoring user-scalable=no. Cancelling the
+     gesture events is the only way to stop that, and since e.scale is
+     a cleaner signal than the pointer pair anyway, the camera is driven
+     from it directly while it lasts. */
+  addEventListener('gesturestart', e => {
+    e.preventDefault();
+    pinch = null;
+    pinched = true;
+    suppressClick = true;
+    tourMode = false;
+    flight = null;
+    dismissHint();
+    nativeGesture = { s0: cam.s, w: toWorld(e.clientX, e.clientY) };
+  }, { passive: false });
+  addEventListener('gesturechange', e => {
+    e.preventDefault();
+    if (!nativeGesture) return;
+    cam.s = clampScale(nativeGesture.s0 * e.scale);
+    anchor(nativeGesture.w, e.clientX, e.clientY);
+  }, { passive: false });
+  addEventListener('gestureend', e => {
+    e.preventDefault();
+    nativeGesture = false;
+    lastTouchZoom = performance.now();
+  }, { passive: false });
+
+  // double click zooms in, shift+double click zooms out. Touch has its
+  // own double tap above; skip the compatibility event it may also fire.
   stage.addEventListener('dblclick', e => {
     if (e.target.closest('[data-interactive]')) return;
+    if (performance.now() - lastTouchZoom < 600) return;
     freeZoom(e.shiftKey ? 0.5 : 2, e.clientX, e.clientY);
+  });
+
+  /* ---------------- keyboard focus follows the camera ----------------
+     Tabbing can land on a link that is parked somewhere else in the
+     world, where it is both invisible and, with a focus ring, silently
+     off screen. So whenever anything inside the world takes focus, fly
+     the camera to it. This is what makes the site usable without a
+     mouse at all: tab walks the cards, and the view keeps up. */
+  world.addEventListener('focusin', e => {
+    // only for keyboard focus: clicking a link focuses it too, and
+    // flying the camera out from under a mouse user is nauseating
+    let keyboard = true;
+    try { keyboard = e.target.matches(':focus-visible'); } catch (err) {}
+    if (!keyboard) return;
+    const placed = e.target.closest('[data-x]');
+    if (!placed) return;
+    const mobile = isMobileLayout();
+    const x = +((mobile && placed.dataset.xM) || placed.dataset.x);
+    const y = +((mobile && placed.dataset.yM) || placed.dataset.y);
+    if (!isFinite(x) || !isFinite(y)) return;
+    // frame the card itself, a little looser than its own box
+    const w = (placed.offsetWidth || 600) * 1.25;
+    const h = (placed.offsetHeight || 500) * 1.25;
+    const s = Math.min(innerWidth / w, innerHeight / h);
+    startFlight({ x, y, s: (isFinite(s) && s > 0) ? Math.min(s, 2) : 1, bearing: cam.r });
   });
 
   addEventListener('keydown', e => {

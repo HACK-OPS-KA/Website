@@ -8,7 +8,7 @@
 <meta property="og:title" content="the slop museum · op001 archive" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="Every gloriously cursed prototype built at SLOPATHON OP001, in one place." />
-<meta property="og:image" content="https://hackops.tech/assets/op002-slopathon.jpg" />
+<meta property="og:image" content="https://hackops.tech/assets/op001-slopathon.jpg" />
 <meta property="og:url" content="https://hackops.tech/projects.html" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="preload" href="assets/good-times.otf" as="font" type="font/otf" crossorigin />
-<link rel="stylesheet" href="projects.css?v=1" />
+<link rel="stylesheet" href="projects.css?v=2" />
 <script>
   /* apply saved theme before first paint — shared key with the main desktop */
   (function () {
@@ -53,7 +53,9 @@
 </header>
 
 <div class="filter">
-  <input id="filter" type="search" placeholder="filter by name, team, keyword…" autocomplete="off" />
+  <label class="sr-only" for="filter">filter the archive</label>
+  <input id="filter" type="search" placeholder="filter by name, team, keyword…"
+         autocomplete="off" aria-label="filter the archive by name, team or keyword" />
 </div>
 
 <main class="grid" id="grid" aria-live="polite"></main>
@@ -61,6 +63,13 @@
 <footer>
   the archive rebuilds itself whenever a submission is merged ·
   <a href="https://github.com/HACK-OPS-KA/SLOPATHON" target="_blank" rel="noopener">HACK-OPS-KA/SLOPATHON</a>
+  <br />
+  <!-- keep this list identical to the socials card on the desktop -->
+  <a href="/">the desktop</a> ·
+  <a href="/photos.html">photo notice</a> ·
+  <a href="https://www.linkedin.com/company/hack-ops/" target="_blank" rel="me noopener">linkedin</a> ·
+  <a href="https://www.instagram.com/hackops.tech" target="_blank" rel="me noopener">instagram</a> ·
+  <a href="https://github.com/HACK-OPS-KA" target="_blank" rel="me noopener">github</a>
 </footer>
 
 <!-- exhibit modal -->

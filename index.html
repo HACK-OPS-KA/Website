@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <title>hack//ops</title>
-<meta name="description" content="hack//ops runs experimental hackathons in karlsruhe. karlsruhe builds here." />
-<meta property="og:title" content="hack//ops" />
+<meta name="description" content="hack//ops runs experimental hackathons in karlsruhe. next up: op//002 bare metal, the hardware hackathon, 03.12 - 06.12.2026." />
+<meta property="og:title" content="hack//ops · op//002 bare metal" />
 <meta property="og:type" content="website" />
-<meta property="og:description" content="karlsruhe builds here. experimental hackathons by students, printed on one endless desktop." />
+<meta property="og:description" content="karlsruhe builds here. op//002 bare metal, the hardware hackathon, 03.12 - 06.12.2026. solder, sensors, silicon." />
 <meta property="og:image" content="https://hackops.tech/assets/op000-hero.jpg" />
 <meta property="og:url" content="https://hackops.tech" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,7 +18,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="preload" href="assets/good-times.otf" as="font" type="font/otf" crossorigin />
-<link rel="stylesheet" href="site.css?v=desktop-8" />
+<link rel="stylesheet" href="site.css?v=desktop-9" />
 <script>
   /* apply the saved theme before first paint so there is no flash */
   (function () {
@@ -38,11 +38,26 @@
     <p><strong>hack//ops</strong> · karlsruhe builds here.</p>
     <p>This site is one big zoomable desktop and needs JavaScript to fly.
        The short version: we are a Karlsruhe student group running experimental
-       hackathons. First up: op//002 slopathon, summer 2026.</p>
+       hackathons. Next up: op//002 bare metal, the hardware hackathon,
+       03.12 - 06.12.2026 in Karlsruhe. Before that we ran op//001 slopathon
+       in July 2026, and its archive is at
+       <a href="/projects.html">the slop museum</a>.</p>
   </div>
 </noscript>
 
-<div id="stage">
+<!-- the taskbar comes before the world in the DOM on purpose: tab order
+     follows document order, and starting inside the world meant a
+     keyboard user walked every card and link before ever reaching the
+     navigation. It is fixed and z-indexed, so it still paints on top. -->
+<header>
+  <button class="wordmark" type="button" data-interactive
+          onclick="hackops.flyTo('home')">hack<b>//</b>ops</button>
+  <nav id="stops-nav" aria-label="Stops" data-interactive></nav>
+  <button id="modebtn" class="mode-toggle" type="button" data-interactive
+          aria-label="Toggle dark mode"><span class="dot" aria-hidden="true"></span><span id="modelbl">dark mode</span></button>
+</header>
+
+<main id="stage">
   <canvas id="grid" aria-hidden="true"></canvas>
 
   <!-- ==============================================================
@@ -54,9 +69,16 @@
        data-stop="id"    makes it a camera keyframe; tour = document order
        data-vw / data-vh the world rect the camera frames at landing
        data-bearing      camera roll at landing, degrees
+       Any of these with an -m suffix (data-x-m, data-cy-m, data-vw-m,
+       data-bearing-m) replaces the base value at 640px and below.
        THE TOUR: home, then a 50x microscope dive into the microprint,
-       pull out and pan to the manifesto, the ops cluster, crew, the
-       join dialog, then the full desktop.
+       pull out and pan to the manifesto, the ops cluster, past ops,
+       crew, then the full desktop.
+       PHONES: the world is not scattered, it is two columns. The home
+       column sits at x 6000, everything op-related at x 7480, and each
+       stop is framed at roughly 1:1 so a world pixel reads as a screen
+       pixel. That is why the mobile card widths in site.css look like
+       ordinary phone layout numbers.
        ============================================================== -->
   <div id="world">
 
@@ -67,7 +89,7 @@
     <section class="stop-home" data-stop="home" data-label="hack//ops"
              data-x="6000" data-y="5400" data-vw="1600" data-vh="1300" data-bearing="0"
              data-cx="6000" data-cy="5508"
-             data-cx-m="6000" data-cy-m="5807" data-vw-m="680" data-vh-m="1450">
+             data-cx-m="6000" data-cy-m="5530" data-vw-m="340" data-vh-m="730">
       <p class="home-tag">karlsruhe builds here.</p>
       <h1 class="home-title">hack<b>//</b>ops</h1>
       <p class="home-blurb">
@@ -76,32 +98,34 @@
         <b>hack//ops</b> is the fast lane of the karlsruhe tech ecosystem
       </p>
       <div class="runs-list">
-        <span>hack//ops runs <b style="color:var(--pink)">slopathons</b></span>
-        <span>hack//ops runs <b style="color:var(--silver)">hardware jams</b></span>
-        <span>hack//ops runs <b style="color:var(--purple)">agent gauntlets</b></span>
-        <span>hack//ops runs <b style="color:var(--red)">build fridays</b></span>
-        <span>hack//ops runs <b style="color:var(--gold)">benchmarks</b></span>
-        <span>hack//ops runs <b style="color:var(--sky)">co-working</b></span>
-        <span>hack//ops runs <b style="color:var(--pink)">prototypes</b></span>
-        <span>hack//ops runs <b style="color:var(--purple)">experiments</b></span>
-        <span>hack//ops runs <b style="color:var(--gold)">karlsruhe</b></span>
+        <span>hack//ops runs <b style="color:var(--pink-txt)">slopathons</b></span>
+        <span>hack//ops runs <b style="color:var(--silver-txt)">hardware jams</b></span>
+        <span>hack//ops runs <b style="color:var(--purple-txt)">agent gauntlets</b></span>
+        <span>hack//ops runs <b style="color:var(--red-txt)">build fridays</b></span>
+        <span>hack//ops runs <b style="color:var(--gold-txt)">benchmarks</b></span>
+        <span>hack//ops runs <b style="color:var(--sky-txt)">co-working</b></span>
+        <span>hack//ops runs <b style="color:var(--pink-txt)">prototypes</b></span>
+        <span>hack//ops runs <b style="color:var(--purple-txt)">experiments</b></span>
+        <span>hack//ops runs <b style="color:var(--gold-txt)">karlsruhe</b></span>
       </div>
       <p class="home-foot">scroll to fly · 49.0069 N · 8.4037 E</p>
     </section>
 
-    <!-- the signup dialog: pinned into the home view, impossible to miss;
-         on phones it moves from beside the hero to directly below it -->
-    <section class="win announce-win" style="--tbar: var(--pink)"
+    <!-- the announcement dialog: pinned into the home view, impossible to
+         miss; on phones it moves from beside the hero to directly below it.
+         Always points at the NEXT operation. When op//002 is over, repoint
+         it at op//003 and move bare metal down to the past ops cluster. -->
+    <section class="win announce-win" style="--tbar: var(--silver)"
              data-x="6540" data-y="5060" data-rot="4"
-             data-x-m="6000" data-y-m="5860" data-rot-m="0">
-      <div class="win-title"><span class="t">op002_source.exe</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+             data-x-m="6000" data-y-m="5765" data-rot-m="0">
+      <div class="win-title"><span class="t">op002_bare_metal.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
-        <p class="mono">public repo</p>
-        <h2>the source is open.</h2>
-        <p>Every cursed prototype from op001, in one place. Or dive into the raw repo.</p>
-        <a class="luma-btn" data-interactive href="/projects.html">browse the slop museum<span class="sub">op001 archive · every project</span></a>
-        <a class="luma-btn" data-interactive href="https://github.com/HACK-OPS-KA/SLOPATHON"
-           target="_blank" rel="noopener">view on github<span class="sub">hack-ops-ka / slopathon</span></a>
+        <p class="mono">next operation · 03.12 - 06.12.2026</p>
+        <h2>bare metal.</h2>
+        <p>Hardware hackathon. Solder, sensors, silicon. If it does not
+           physically exist, it does not count.</p>
+        <a class="luma-btn" data-interactive href="https://luma.com/user/hackops"
+           target="_blank" rel="noopener">follow on lu.ma<span class="sub">registration opens soon · karlsruhe · free</span></a>
       </div>
     </section>
 
@@ -125,11 +149,14 @@
     </section>
 
     <!-- 03 MANIFESTO -->
-    <section class="win" style="--tbar: var(--purple); width: 860px"
+    <section class="win manifesto-win" style="--tbar: var(--purple)"
              data-stop="manifesto" data-label="manifesto"
              data-x="4150" data-y="6750" data-rot="-11" data-bearing="-11"
-             data-vw="980" data-vh="760">
-      <div class="win-title"><span class="t">manifesto.txt</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+             data-vw="980" data-vh="760"
+             data-x-m="4150" data-y-m="6750" data-rot-m="0"
+             data-cx-m="4150" data-cy-m="6750" data-vw-m="340" data-vh-m="730"
+             data-bearing-m="0">
+      <div class="win-title"><span class="t">manifesto.txt</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <h2>community first. mainstream last.</h2>
         <p><strong>hack//ops is a student group in karlsruhe</strong> that runs
@@ -140,46 +167,77 @@
            a crew of techies who are not scared of risk, breaking away from
            the mainstream event format one operation at a time.</p>
         <div class="rules">
-          <div style="--rc: var(--pink)"><span class="n">rule_01</span><span class="r">ship it, then talk about it.</span></div>
-          <div style="--rc: var(--purple)"><span class="n">rule_02</span><span class="r">community is the moat.</span></div>
-          <div style="--rc: var(--sky)"><span class="n">rule_03</span><span class="r">experimental formats over safe formats.</span></div>
-          <div style="--rc: var(--gold)"><span class="n">rule_04</span><span class="r">just let them eat pcbs.</span></div>
+          <div style="--rc: var(--pink-txt)"><span class="n">rule_01</span><span class="r">ship it, then talk about it.</span></div>
+          <div style="--rc: var(--purple-txt)"><span class="n">rule_02</span><span class="r">community is the moat.</span></div>
+          <div style="--rc: var(--sky-txt)"><span class="n">rule_03</span><span class="r">experimental formats over safe formats.</span></div>
+          <div style="--rc: var(--gold-txt)"><span class="n">rule_04</span><span class="r">just let them eat pcbs.</span></div>
         </div>
       </div>
     </section>
 
-    <!-- 04 OPERATIONS: four event windows scattered in a cluster -->
-    <div class="ops-head deco" data-x="8060" data-y="6060" data-rot="-2">the <b>op</b> series</div>
+    <!-- 04 OPERATIONS: the next op plus everything still in planning.
+         The card with the poster is always the one that is actually
+         happening; the rest carry a plain grey status. On phones the
+         whole cluster restacks into one column via data-x-m/data-y-m,
+         so the stop is walked by panning down instead of sideways. -->
+    <div class="ops-head deco" data-x="8060" data-y="6060" data-rot="-2"
+         data-x-m="7480" data-y-m="6393" data-rot-m="0">the <b>op</b> series</div>
 
-    <section class="win op-win" style="--tbar: var(--pink); --sc: var(--pink)"
-             data-x="7480" data-y="6800" data-rot="6">
-      <div class="win-title"><span class="t">op002_slopathon.exe</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
-      <img src="assets/op002-slopathon.jpg" alt="op002 slopathon poster: pink desktop windows with a wireframe pyramid" />
+    <section class="win op-win op-next" style="--tbar: var(--silver); --sc: var(--pink-txt)"
+             data-x="7480" data-y="6800" data-rot="6"
+             data-x-m="7480" data-y-m="6800" data-rot-m="0">
+      <div class="win-title"><span class="t">op002_bare_metal.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
+      <img src="assets/op002-bare-metal.jpg" alt="op002 bare metal poster: yellow hardware hackathon poster, photographs of people soldering circuit boards" />
       <div class="win-body">
-        <h3>slopathon</h3>
-        <p>Whoever slops the most, wins. Build the most gloriously cursed,
-           over-engineered, useless-but-working prototype you can. No pitch
-           decks, no recruiter booths. Our opening operation.</p>
-        <span class="status live">registration open</span>
-        <a class="luma-btn" data-interactive href="https://luma.com/zxavzf5b"
-           target="_blank" rel="noopener">sign up on lu.ma<span class="sub">op//002 · karlsruhe · free</span></a>
+        <h3>bare metal</h3>
+        <p class="mono">03.12 - 06.12.2026 · karlsruhe</p>
+        <p>Hardware hackathon. Solder, sensors, silicon. If it does not
+           physically exist, it does not count. The anti-slideware format:
+           something has to move, light up, sense or actuate.</p>
+        <p>Four days, 100 builders, everyone welcome. You ship a working
+           physical thing and demo it live. Hardware and in-kind prizes,
+           no cash, because we want builders and not hackathon-maxxers.</p>
+        <!-- kaira is 80% confirmed. If it falls through, this one line
+             is the only place on the site that names them. -->
+        <p class="mono partners">with kit nova and kaira</p>
+        <span class="status live">save the date</span>
+        <a class="luma-btn" data-interactive href="https://luma.com/user/hackops"
+           target="_blank" rel="noopener">follow on lu.ma<span class="sub">registration opens soon · free</span></a>
       </div>
     </section>
 
-    <section class="win op-win" style="--tbar: var(--silver)"
-             data-x="8560" data-y="6760" data-rot="-5">
-      <div class="win-title"><span class="t">op001_bare_metal.exe</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+    <section class="win op-win" style="--tbar: var(--gold)"
+             data-x="8560" data-y="6700" data-rot="-5"
+             data-x-m="7480" data-y-m="7396" data-rot-m="0">
+      <div class="win-title"><span class="t">op002_tracks.txt</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
-        <h3>bare metal</h3>
-        <p>Hardware hackathon. Solder, sensors, silicon. If it does not
-           physically exist, it does not count.</p>
-        <span class="status">in planning</span>
+        <h3>two tracks</h3>
+        <div class="rules">
+          <div style="--rc: var(--pink-txt)"><span class="n">01</span><span class="r">open track: build anything. just build it for real.</span></div>
+          <div style="--rc: var(--sky-txt)"><span class="n">02</span><span class="r">power track: same problem, every team. best solution wins.</span></div>
+        </div>
+        <p>Open track: no theme, no constraints beyond the one that matters.
+           Bring the thing you never had a deadline for.</p>
+        <p>Power track: one defined problem, one measurable metric, a real
+           scoreboard. Not vibes, not pitch quality.</p>
+        <span class="status">tracks in progress</span>
+      </div>
+    </section>
+
+    <section class="win partners-win" style="--tbar: var(--sky)"
+             data-x="8560" data-y="7280" data-rot="3"
+             data-x-m="7480" data-y-m="7716" data-rot-m="0">
+      <div class="win-title"><span class="t">partners.svg - viewer</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
+      <div class="win-body">
+        <img src="assets/KIT-nova_Logo_01-1.svg" alt="kit nova" />
+        <p class="mono">machines, safety and mentoring for op//002</p>
       </div>
     </section>
 
     <section class="win op-win" style="--tbar: var(--purple)"
-             data-x="7540" data-y="7680" data-rot="-4">
-      <div class="win-title"><span class="t">op003_agent_gauntlet.exe</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+             data-x="7540" data-y="7680" data-rot="-4"
+             data-x-m="7480" data-y-m="7922" data-rot-m="0">
+      <div class="win-title"><span class="t">op003_agent_gauntlet.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <h3>agent gauntlet</h3>
         <p>Your agents versus everyone else's. Vibes do not ship.
@@ -189,8 +247,9 @@
     </section>
 
     <section class="win op-win" style="--tbar: var(--red)"
-             data-x="8620" data-y="7720" data-rot="5">
-      <div class="win-title"><span class="t">op004_build_friday.exe</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+             data-x="8620" data-y="7720" data-rot="5"
+             data-x-m="7480" data-y-m="8158" data-rot-m="0">
+      <div class="win-title"><span class="t">op004_build_friday.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <h3>build friday</h3>
         <p>"I compile, therefore I am." Recurring co-working and
@@ -199,23 +258,90 @@
       </div>
     </section>
 
-    <!-- the ops camera stop frames the whole cluster -->
+    <!-- the ops camera stop frames the whole cluster on desktop, and just
+         the bare metal card on phones (the rest of the column is one pan
+         away, which beats four unreadable cards at once) -->
     <div class="stop-field" data-stop="ops" data-label="operations"
-         data-x="8050" data-y="7100" data-vw="2100" data-vh="1750" data-bearing="4"></div>
+         data-x="8050" data-y="7100" data-vw="2100" data-vh="1750" data-bearing="4"
+         data-cx-m="7480" data-cy-m="6800" data-vw-m="340" data-vh-m="730"
+         data-bearing-m="0"></div>
 
-    <!-- 05 CREW -->
+    <!-- 05 PAST OPS: operations that already shipped. Everything an
+         attendee or a sponsor might want to look up afterwards lives
+         here: dates, size, the final vote and the archive links. When a
+         new op finishes, move its card down here and give it a status
+         of "archived" plus its standings. -->
+    <div class="ops-head deco" data-x="7700" data-y="8480" data-rot="-1"
+         data-x-m="7480" data-y-m="8548" data-rot-m="0">past <b>ops</b></div>
+
+    <section class="win op-win" style="--tbar: var(--pink)"
+             data-x="7500" data-y="9080" data-rot="-3"
+             data-x-m="7480" data-y-m="8984" data-rot-m="0">
+      <div class="win-title"><span class="t">op001_slopathon.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
+      <img src="assets/op001-slopathon.jpg" alt="op001 slopathon poster: pink desktop windows with a wireframe pyramid" />
+      <div class="win-body">
+        <h3>slopathon</h3>
+        <p class="mono">july 2026 · karlsruhe · our opening operation</p>
+        <p>Whoever slops the most, wins. Build the most gloriously cursed,
+           over-engineered, useless-but-working prototype you can. No pitch
+           decks, no recruiter booths.</p>
+        <p>12 teams shipped 12 working prototypes in one room and the room
+           voted on the last night. Every exhibit is still online.</p>
+        <span class="status">archived</span>
+        <a class="luma-btn" data-interactive href="/projects.html">browse the slop museum<span class="sub">12 exhibits · every project</span></a>
+        <a class="luma-btn ghost" data-interactive href="https://github.com/HACK-OPS-KA/SLOPATHON"
+           target="_blank" rel="noopener">view on github<span class="sub">hack-ops-ka / slopathon</span></a>
+      </div>
+    </section>
+
+    <section class="win op-win standings-win" style="--tbar: var(--gold)"
+             data-x="8560" data-y="9040" data-rot="4"
+             data-x-m="7480" data-y-m="9653" data-rot-m="0">
+      <div class="win-title"><span class="t">final_standings.txt</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
+      <div class="win-body">
+        <h3>the vote</h3>
+        <p>20 votes counted in the room on the last night, one per device.
+           Ties are real ties. Nobody was eliminated for shipping zero.</p>
+        <div class="standings">
+          <div class="first"><span class="pl">01</span><span class="nm">terminal arcade</span><span class="ct">5</span></div>
+          <div><span class="pl">02</span><span class="nm">sloppy keyboard</span><span class="ct">3</span></div>
+          <div><span class="pl">02</span><span class="nm">toklock</span><span class="ct">3</span></div>
+          <div><span class="pl">04</span><span class="nm">calendar council</span><span class="ct">2</span></div>
+          <div><span class="pl">04</span><span class="nm">cursed minesweeper</span><span class="ct">2</span></div>
+          <div><span class="pl">04</span><span class="nm">gaslight gatekeep grandmaster</span><span class="ct">2</span></div>
+          <div><span class="pl">04</span><span class="nm">screamy bird</span><span class="ct">2</span></div>
+          <div><span class="pl">08</span><span class="nm">slopar.io</span><span class="ct">1</span></div>
+          <div><span class="pl">09</span><span class="nm">chladni clock</span><span class="ct">0</span></div>
+          <div><span class="pl">09</span><span class="nm">cursor distorter</span><span class="ct">0</span></div>
+          <div><span class="pl">09</span><span class="nm">noise enforcement officer</span><span class="ct">0</span></div>
+          <div><span class="pl">09</span><span class="nm">the weight bay</span><span class="ct">0</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- the past ops camera stop: the whole cluster on desktop, the
+         slopathon card alone on phones -->
+    <div class="stop-field" data-stop="past" data-label="past ops"
+         data-x="8030" data-y="9020" data-vw="1900" data-vh="1450" data-bearing="-2"
+         data-cx-m="7480" data-cy-m="8984" data-vw-m="340" data-vh-m="730"
+         data-bearing-m="0"></div>
+
+    <!-- 06 CREW -->
     <section class="win crew-win" style="--tbar: var(--sky)"
              data-stop="crew" data-label="crew"
              data-x="5250" data-y="4250" data-rot="5" data-bearing="5"
-             data-vw="760" data-vh="640">
-      <div class="win-title"><span class="t">crew // operators</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+             data-cx="5250" data-cy="4440" data-vw="760" data-vh="1060"
+             data-x-m="5250" data-y-m="4250" data-rot-m="0"
+             data-cx-m="5250" data-cy-m="4250" data-vw-m="340" data-vh-m="730"
+             data-bearing-m="0">
+      <div class="win-title"><span class="t">crew // operators</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <h2>operators.</h2>
         <p>A growing crew of karlsruhe students, backed by the local
            ecosystem. Partners and sponsors are announced with each
            operation.</p>
         <div class="crew-rows">
-          <div><span class="nm">marko nedilko</span><span class="rl" style="--cc: var(--pink)">founder · ops</span></div>
+          <div><span class="nm">marko nedilko</span><span class="rl" style="--cc: var(--pink-txt)">founder · ops</span></div>
           <div><span class="nm">sebastian kallfelz</span><span class="rl">core team</span></div>
           <div><span class="nm">pascal schneider</span><span class="rl">core team</span></div>
           <div><span class="nm">milan ferus-comelo</span><span class="rl">core team</span></div>
@@ -223,17 +349,50 @@
       </div>
     </section>
 
-    <!-- 06 EXPLORE: the whole desktop -->
+    <!-- socials: one card, so there is exactly one place to update when
+         a channel is added. rel="me" ties the profiles back to the
+         domain. Keep this list identical to the one in the projects
+         page footer. -->
+    <section class="win socials-win" style="--tbar: var(--purple)"
+             data-x="5250" data-y="4760" data-rot="-4"
+             data-x-m="5250" data-y-m="4700" data-rot-m="0">
+      <div class="win-title"><span class="t">follow.url</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
+      <div class="win-body">
+        <h3>find us.</h3>
+        <div class="socials">
+          <a data-interactive href="https://www.linkedin.com/company/hack-ops/"
+             target="_blank" rel="me noopener"><span class="w">linkedin</span><span class="h">/company/hack-ops</span></a>
+          <a data-interactive href="https://www.instagram.com/hackops.tech"
+             target="_blank" rel="me noopener"><span class="w">instagram</span><span class="h">@hackops.tech</span></a>
+          <a data-interactive href="https://github.com/HACK-OPS-KA"
+             target="_blank" rel="me noopener"><span class="w">github</span><span class="h">hack-ops-ka</span></a>
+          <a data-interactive href="https://luma.com/user/hackops"
+             target="_blank" rel="me noopener"><span class="w">lu.ma</span><span class="h">every operation</span></a>
+          <a data-interactive href="/photos.html"><span class="w">photo notice</span><span class="h">what we shoot, how to opt out</span></a>
+        </div>
+        <p class="mono">team@hackops.tech</p>
+      </div>
+    </section>
+
+    <!-- 07 EXPLORE: the whole desktop. The frame has to grow whenever the
+         world does, or the newest cluster sits outside the "everything"
+         shot. On phones the world is two tall columns instead of a wide
+         field, so the mobile frame is portrait and much taller. -->
     <div class="stop-field" data-stop="field" data-label="explore"
-         data-x="6400" data-y="6000" data-vw="6200" data-vh="4600" data-bearing="0"></div>
+         data-x="6600" data-y="6550" data-vw="6800" data-vh="6200" data-bearing="0"
+         data-cx-m="6400" data-cy-m="7000" data-vw-m="5200" data-vh-m="6800"></div>
 
     <!-- ================= desktop decoration ================= -->
 
-    <div class="silkprint deco" data-x="6300" data-y="7900" data-rot="0">karlsruhe builds here.</div>
+    <!-- the watermark is 2800 world units wide and paints over anything
+         it crosses, so on phones it moves off the op column and parks
+         under the home column instead -->
+    <div class="silkprint deco" aria-hidden="true" data-x="6300" data-y="7900" data-rot="0"
+         data-x-m="6000" data-y-m="7500">karlsruhe builds here.</div>
 
     <section class="win wallpaper-win deco" style="--tbar: var(--sky)"
              data-x="4620" data-y="5150" data-rot="-8">
-      <div class="win-title"><span class="t">wallpaper.jpg - viewer</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+      <div class="win-title"><span class="t">wallpaper.jpg - viewer</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <img src="assets/op000-hero-crop.jpg" alt="chrome pyramid station floating in a blue sky" />
       <div class="cap">op000_render.png · 3d, not ai · blender</div>
     </section>
@@ -243,16 +402,16 @@
          instead of sitting beside the title -->
     <section class="win pyr-win" style="--tbar: var(--purple)" data-interactive
              data-x="6520" data-y="5640" data-rot="-3"
-             data-x-m="6000" data-y-m="6262" data-rot-m="0">
-      <div class="win-title"><span class="t">pyramid1.fbx</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+             data-x-m="6000" data-y-m="6084" data-rot-m="0">
+      <div class="win-title"><span class="t">pyramid1.fbx</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <pre id="ascii-pyr" aria-hidden="true"></pre>
       </div>
     </section>
 
-    <section class="win load-win deco" style="--tbar: var(--gold)"
+    <section class="win load-win deco" aria-hidden="true" style="--tbar: var(--gold)"
              data-x="6900" data-y="7480" data-rot="-3">
-      <div class="win-title"><span class="t">copying karlsruhe.zip</span><span class="b">_</span><span class="b">&#9633;</span><span class="b">&times;</span></div>
+      <div class="win-title"><span class="t">copying karlsruhe.zip</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <p class="lbl">building community... 68%</p>
         <div class="load-bar">
@@ -262,56 +421,48 @@
       </div>
     </section>
 
-    <section class="win err-win deco" style="--tbar: var(--red)"
+    <section class="win err-win deco" aria-hidden="true" style="--tbar: var(--red)"
              data-x="8720" data-y="5250" data-rot="10">
-      <div class="win-title"><span class="t">error</span><span class="b">&times;</span></div>
+      <div class="win-title"><span class="t">error</span><span class="b" aria-hidden="true">&times;</span></div>
       <div class="win-body">
         <span class="err-glyph">!</span>
         <p>not_a_bug.exe: it's a feature. <br /><strong>[ ok ]</strong></p>
       </div>
     </section>
 
-    <div class="dicon deco" data-x="4280" data-y="4180" data-rot="0" style="--dc: var(--gold)">
+    <div class="dicon deco" aria-hidden="true" data-x="4280" data-y="4180" data-rot="0" style="--dc: var(--gold)">
       <span class="px folder"></span><span class="lbl">my_hackathon</span>
     </div>
-    <div class="dicon deco" data-x="8950" data-y="4520" data-rot="0" style="--dc: var(--sky)">
+    <div class="dicon deco" aria-hidden="true" data-x="8950" data-y="4520" data-rot="0" style="--dc: var(--sky)">
       <span class="px doc"></span><span class="lbl">readme.txt</span>
     </div>
-    <div class="dicon deco" data-x="4420" data-y="8150" data-rot="0" style="--dc: var(--pink)">
+    <div class="dicon deco" aria-hidden="true" data-x="4420" data-y="8150" data-rot="0" style="--dc: var(--pink)">
       <span class="px pyra"></span><span class="lbl">slop.exe</span>
     </div>
-    <div class="dicon deco" data-x="9300" data-y="7480" data-rot="0" style="--dc: var(--purple)">
+    <div class="dicon deco" aria-hidden="true" data-x="9300" data-y="7480" data-rot="0" style="--dc: var(--purple)">
       <span class="px folder"></span><span class="lbl">op_series</span>
     </div>
-    <div class="dicon deco" data-x="6180" data-y="3620" data-rot="0" style="--dc: var(--silver)">
+    <div class="dicon deco" aria-hidden="true" data-x="6180" data-y="3620" data-rot="0" style="--dc: var(--silver)">
       <span class="px doc"></span><span class="lbl">sponsors.tba</span>
     </div>
 
   </div>
-</div>
-
-<header>
-  <button class="wordmark" type="button" data-interactive
-          onclick="hackops.flyTo('home')">hack<b>//</b>ops</button>
-  <nav id="stops-nav" aria-label="Stops" data-interactive></nav>
-  <button id="modebtn" class="mode-toggle" type="button" data-interactive
-          aria-label="Toggle dark mode"><span class="dot" aria-hidden="true"></span><span id="modelbl">dark mode</span></button>
-</header>
+</main>
 
 <footer aria-hidden="true">
   <div id="hud">X 00000 · Y 00000 · FIELD 00000</div>
 </footer>
 
-<div id="hint">SCROLL TO FLY</div>
+<div id="hint" aria-hidden="true">SCROLL TO FLY</div>
 
 <button id="nextbtn" type="button" data-interactive aria-label="Next stop">&rarr;</button>
 
 <div id="camctl" data-interactive role="group" aria-label="Camera controls">
-  <button id="zin" type="button" title="Zoom in">+</button>
-  <button id="zout" type="button" title="Zoom out">&minus;</button>
-  <button id="lvl" type="button" title="Level the camera">&deg;</button>
+  <button id="zin" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+  <button id="zout" type="button" aria-label="Zoom out" title="Zoom out">&minus;</button>
+  <button id="lvl" type="button" aria-label="Level the camera" title="Level the camera">&deg;</button>
 </div>
 
-<script src="engine.js?v=desktop-5"></script>
+<script src="engine.js?v=desktop-6"></script>
 </body>
 </html>

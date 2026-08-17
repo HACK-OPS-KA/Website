@@ -13,7 +13,12 @@ export const firebaseConfig = {
 };
 
 // every doc for this vote lives under this path, so future operations
-// (op003, op004, ...) can reuse the same schema without collisions
+// can reuse the same schema without collisions.
+// NOTE: this reads op002 because slopathon was numbered op//002 while it
+// was being planned; the site now calls it op//001, matching the poster
+// and the archive. Do not "fix" the string: it is the live Firestore
+// path holding the real slopathon results. The next event gets its own
+// id, e.g. "op002-bare-metal".
 export const EVENT_ID = "op002-slopathon";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";

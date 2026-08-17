@@ -1,4 +1,5 @@
-$root = "C:\Users\blade\hackops-site"
+# the repo itself, wherever it happens to be cloned
+$root = $PSScriptRoot
 $port = 8322
 $listener = [System.Net.HttpListener]::new()
 $listener.Prefixes.Add("http://localhost:$port/")

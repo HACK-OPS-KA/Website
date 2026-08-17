@@ -1,5 +1,5 @@
 /* ============================================================
-   hack//ops - op//002 vote widget
+   hack//ops - the in-room vote widget
    A small state machine (locked -> open -> closed) rendered into
    #vote-body. Real enforcement of the window lives in Firestore
    Security Rules (server clock); this file only decides what to
