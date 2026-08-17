@@ -6,7 +6,7 @@
   var REMOTE = 'https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects.json';
   var LOCAL = 'projects.json';
 
-  // final op//002 vote result, keyed by project slug. This lives here rather
+  // final op//001 vote result, keyed by project slug. This lives here rather
   // than in projects.json because that file is generated in the SLOPATHON
   // repo and loaded remote-first, so any field added to it gets overwritten
   // on the next regeneration.

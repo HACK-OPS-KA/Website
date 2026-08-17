@@ -17,8 +17,17 @@ The front page is a "camera world": a fixed stage with a pastel grid where conte
 sits as absolutely positioned retro desktop windows in a large coordinate space.
 The camera pans and zooms between stops instead of the page scrolling.
 
-The one dynamic part is the op//002 vote system, which is backed by Firebase
-because GitHub Pages cannot run server code or enforce timing.
+The one dynamic part is the in-room vote system, which is backed by Firebase
+because GitHub Pages cannot run server code or enforce timing. It ran for
+slopathon and is kept, unmounted, for the next operation.
+
+### Operation numbering
+
+Slopathon is **op//001** and bare metal is **op//002**. That matches the printed
+bare metal poster and the archive. An earlier planning order had them the other
+way around, which is why `firebase-init.js` still holds
+`EVENT_ID = "op002-slopathon"`: it is a live Firestore path with the real results
+under it and must not be renamed.
 
 ### File map
 
@@ -26,15 +35,17 @@ because GitHub Pages cannot run server code or enforce timing.
 |---|---|
 | `index.html` | The whole front page. All content lives here inside `<div id="world">`. |
 | `site.css` | All styling. Design tokens (colors, fonts) are the variables at the top. |
-| `engine.js` | Camera world engine: placement, camera stops, flight, ASCII pyramid. |
-| `projects.html` / `.css` / `.js` / `.json` | Separate projects listing page. |
-| `vote.js` | Front page vote widget: countdown, modal, casting a vote. |
+| `engine.js` | Camera world engine: placement, camera stops, flight, gestures, ASCII pyramid. |
+| `projects.html` / `.css` / `.js` / `.json` | The slop museum, the op//001 archive. |
+| `photos.html` | Photo and privacy notice for event photography. Uses `projects.css`. |
+| `EVENT-BLURBS.md` | Paste-ready copy for lu.ma, socials and posters. Keep in sync with `photos.html`. |
+| `vote.js` | Vote widget: countdown, modal, casting a vote. Not mounted between events. |
 | `admin.html` | Vote administration: sign in, manage teams, set the voting window. |
 | `firebase-init.js` | Shared Firebase bootstrap and the `EVENT_ID` constant. |
 | `firestore.rules` | Firestore security rules. The real enforcement layer. |
 | `CNAME` | Holds `hackops.tech`. This is what claims the custom domain. Do not delete. |
 | `.nojekyll` | Stops GitHub from running Jekyll over the files. |
-| `serve.ps1` | Local dev server. |
+| `serve.ps1` | Local dev server, serves the folder it sits in. |
 | `assets/` | Images and the Good Times font used for the wordmark. |
 
 ---
@@ -56,8 +67,7 @@ Open http://localhost:8322
 You need a local server rather than opening `index.html` directly, because the
 site uses JavaScript modules and `fetch`, which browsers block on `file://` URLs.
 
-Note: `EDITING.md` mentions port 8321. The correct port is **8322**, set in
-`serve.ps1`.
+`serve.ps1` serves whatever folder it sits in, so it works from any clone.
 
 ---
 
@@ -69,19 +79,35 @@ Each block is marked with a comment heading:
 | Section | Search for | What it controls |
 |---|---|---|
 | Home | `01 HOME` | Title, tagline, the "hack//ops runs ..." list |
-| Easter egg | `02 MICROPRINT` | Hidden microprint, reachable by typing "slop" or clicking the pyramid 5 times |
+| Announcement | `announcement dialog` | The pulsing card on the home view. Always points at the next operation |
+| Easter egg | `MICROPRINT` | Hidden microprint, reachable by typing "slop" or clicking the pyramid 5 times |
 | Manifesto | `03 MANIFESTO` | Self description and the four rules |
-| Operations | `04 OPERATIONS` | The event windows |
-| Crew | `05 CREW` | Names and roles |
+| Operations | `04 OPERATIONS` | The next event, its tracks and partners, plus everything in planning |
+| Past ops | `05 PAST OPS` | Finished operations with their dates, links and final standings |
+| Crew | `06 CREW` | Names and roles |
+| Socials | `socials:` | LinkedIn, Instagram, GitHub, lu.ma, photo notice, contact address |
 | Decoration | `desktop decoration` | Fake windows and desktop icons |
+
+When an operation finishes, move its card from Operations down into Past ops, set
+its status to `archived`, add a standings card next to it, and repoint the home
+announcement card at whatever is next.
 
 ### Style rules
 
 - Everything lowercase. It is part of the design.
 - No em dashes, no emojis.
 - Only name sponsors once the deal is signed.
-- Colors only through the variables: `var(--pink)`, `var(--purple)`, `var(--sky)`,
-  `var(--silver)`, `var(--red)`, `var(--gold)`.
+- Colors only through the variables, and mind the split:
+  - `--pink`, `--purple`, `--sky`, `--silver`, `--red`, `--gold` are **fills**:
+    title bars, icons, tints. They are 2.0 to 2.9:1 on white, so they are never
+    used for text.
+  - `--pink-txt`, `--purple-txt`, `--sky-txt`, `--silver-txt`, `--red-txt`,
+    `--gold-txt` are the same accents **as text**. They flip with the theme:
+    darkened on the light print, back to the pastels in dark mode.
+  - `--action` is the button fill, dark enough for white text.
+  - `--tbar-ink` is the dark ink used on pastel title bars.
+  - `--ink-body` for anything a visitor has to read, `--ink` for quiet labels,
+    `--ink-2` for pure decoration only.
 
 ### How positioning works
 
@@ -94,8 +120,9 @@ This trips people up, so it is worth understanding.
 - `data-vw` / `data-vh` define the world space rectangle a camera stop frames.
   Actual on screen scale is `min(innerWidth / vw, innerHeight / vh) * 0.85`, so
   whichever ratio is smaller decides the zoom. Increasing `vh` zooms out.
-- Any of these with an `-m` suffix (`data-x-m`, `data-cy-m`, `data-vh-m`) overrides
-  the base value on mobile, which is any viewport 640px wide or narrower.
+- Any of these with an `-m` suffix (`data-x-m`, `data-cy-m`, `data-vh-m`,
+  `data-bearing-m`) overrides the base value on mobile, which is any viewport
+  640px wide or narrower.
 
 Practical consequence: if you change a card's size in CSS, re-check the layout at
 both 1280x800 and 375x812. Hand calculating heights from font sizes and padding
@@ -105,6 +132,59 @@ gets close but is usually off by 10 to 20 pixels. Measure in the browser with
 Adding a new camera stop: give an element `data-stop`, `data-x`, `data-y`,
 `data-vw` and `data-vh`. It gets a navigation chip automatically. Document order
 is tour order.
+
+### The phone layout is a different world
+
+Below 640px the world is not the scattered desktop at all. It is two columns: the
+home block at x 6000, and everything op-related at x 7480, running top to bottom
+through operations and then past ops. Every stop is framed with `data-vw-m="340"`,
+which puts the camera at roughly **scale 1.0 on a 375pt phone**
+(`0.85 * 375 / 340`). That is the whole trick: one world unit is about one screen
+pixel, so the mobile sizes in `site.css` can be read as ordinary phone CSS, and
+a 340 wide card really does render about 320px wide.
+
+Before this the same cards were framed 1500 to 2100 world units wide and landed at
+scale 0.15 to 0.47, which is why everything had to be pinched to be read.
+
+To retune a column: set the viewport to 375x812, read the real card heights with
+`offsetHeight` (they are untransformed, unlike `getBoundingClientRect`), then
+stack the `data-y-m` values with a gap and point `data-cy-m` at the card the stop
+should land on. The camera shows `vh_m / 0.85` world units of height at most, and
+the 52px taskbar eats the top of it.
+
+---
+
+## 3a. Touch, keyboard and contrast
+
+These are easy to break by accident, so here is what is deliberate.
+
+**Gestures.** `engine.js` tracks every pointer, including ones that land on cards
+and buttons. That matters: a phone card fills the screen, so if pointers on
+interactive elements are ignored, the second finger of a pinch never registers and
+pinch zoom silently does nothing. Pinch anchors the world point under the finger
+midpoint, which also gives two finger panning. Safari runs its own `gesture*`
+events on top of the pointer stream and will zoom the page regardless of
+`user-scalable=no`, so those events are cancelled and drive the camera instead.
+
+A flick advances the tour, a drag does not: the test is fast (under 400ms), long
+(over 80px), clearly vertical, and above a velocity floor. A looser test means
+panning teleports you to another stop by accident.
+
+Any drag or pinch suppresses the click that would otherwise fire, so dragging from
+a button pans the world instead of pressing it.
+
+**Keyboard.** The taskbar sits before the stage in the DOM so tab order starts at
+the navigation rather than deep inside the world. Focus moves the camera: anything
+inside `#world` that takes keyboard focus gets flown to, because otherwise you can
+tab onto a link parked somewhere off screen. Mouse focus deliberately does not
+move the camera, which is what the `:focus-visible` check in the `focusin`
+handler is for.
+
+**Contrast.** Both themes pass WCAG AA for every text element that is not marked
+`aria-hidden`. If you add colour, use the token split described in the style rules
+above. The quickest check is to walk the rendered text in the console and compare
+each computed colour against its composited background; anything under 4.5:1 for
+normal text or 3:1 for large text needs a `-txt` variant.
 
 ---
 
@@ -196,7 +276,8 @@ early by changing their device clock. The countdown in the browser is cosmetic.
 
 ### Data model
 
-Everything is namespaced under an event ID (`op002-slopathon`, set in
+Everything is namespaced under an event ID (`op002-slopathon`, the slopathon
+despite its name, see the numbering note in section 1; set in
 `firebase-init.js`) so future operations reuse the schema without collisions and
 without deleting past results.
 

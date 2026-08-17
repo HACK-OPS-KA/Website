@@ -31,13 +31,39 @@
   --pane-shadow: 0 14px 34px -26px rgba(97, 85, 92, 0.55);
 
   /* poster accents: slop pink, win95 purple, op000 sky,
-     chrome silver, build-friday red, loading-bar gold */
+     chrome silver, build-friday red, loading-bar gold.
+     These are FILL colors. They are pastel by design and none of them
+     carries enough contrast to be read as small text on paper, so
+     anything a visitor actually has to read uses --ink-body, one of the
+     --*-txt variants below, or --action when it is a button. */
   --pink:   #ef7fb1;
   --purple: #9c8ae0;
   --sky:    #85bede;
   --silver: #a8adbd;
   --red:    #e07070;
   --gold:   #e5c04d;
+
+  /* the action fill: slop pink taken down until white text on it clears
+     4.5:1. On --pink itself that was 2.5:1, and it is the primary call
+     to action on the site. Same value in both themes, because what has
+     to stay readable is the white text on top of it, not the page. */
+  --action: #c2456f;
+
+  /* the same six accents again, but as TEXT on paper. The pastels are
+     2.0 to 2.9:1 on white, so every coloured word on the site used to
+     fail. These flip with the theme: darker on the light print, and
+     back to the pastels on the midnight one, where the pastels are the
+     high contrast choice. */
+  --pink-txt:   #b93e68;
+  --purple-txt: #6a56b5;
+  --sky-txt:    #2c7ba6;
+  --silver-txt: #5f6577;
+  --red-txt:    #b83f3f;
+  --gold-txt:   #8a6d15;
+
+  /* ink for text sitting on a pastel title bar: 5.2:1 on the darkest
+     of the six accents, instead of white at 1.8:1 */
+  --tbar-ink: #2b2329;
 
   --font-display: 'Orbitron', 'Arial Black', sans-serif;
   --font-brand:   'Good Times', 'Orbitron', 'Arial Black', sans-serif;
@@ -64,6 +90,15 @@ html.dark {
   --chrome-bg: rgba(20, 16, 23, 0.92);
   --chrome-edge: rgba(154, 139, 148, 0.25);
   --pane-shadow: 0 14px 34px -22px rgba(0, 0, 0, 0.8);
+
+  /* against the midnight paper the pastels clear 6:1 on their own, and
+     the darkened light-mode variants would sink into the background */
+  --pink-txt:   var(--pink);
+  --purple-txt: var(--purple);
+  --sky-txt:    var(--sky);
+  --silver-txt: var(--silver);
+  --red-txt:    var(--red);
+  --gold-txt:   var(--gold);
 }
 html.dark .win {
   box-shadow:
@@ -88,13 +123,38 @@ html, body {
   text-size-adjust: 100%;
 }
 
-::selection { background: var(--pink); color: #fff; }
+::selection { background: var(--action); color: #fff; }
+
+/* ---------------- focus ----------------
+   There was no focus style at all, which on a page whose content is a
+   camera world made keyboard use guesswork: you could tab onto a link
+   that was both invisible and off screen. The ring is drawn with
+   outline so it never changes layout, and engine.js flies the camera to
+   whatever in-world element takes focus. */
+:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+html.dark :focus-visible { outline-color: var(--pink); }
+/* the CTA already carries a hard drop shadow, so its ring sits tight
+   against the button rather than colliding with it */
+.luma-btn:focus-visible { outline-offset: 1px; }
 
 /* ---------------- stage ---------------- */
 #stage {
   position: fixed; inset: 0;
   touch-action: none;
   cursor: crosshair;
+}
+/* on touch, a drag across a card used to start selecting its text and a
+   long press popped the image callout, both of which fight the camera */
+@media (pointer: coarse) {
+  #world {
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;
+  }
+  #world img { -webkit-user-drag: none; pointer-events: none; }
 }
 #grid {
   position: absolute; inset: 0;
@@ -109,11 +169,16 @@ html, body {
 body.booted #world { visibility: visible; }
 
 /* ---------------- header: the taskbar ---------------- */
+/* every fixed control keeps clear of the notch and the home indicator:
+   the page is viewport-fit=cover, so without this the chips sit under
+   the status bar and the next button under the gesture bar */
 header {
   position: fixed; top: 0; left: 0; right: 0;
-  height: var(--header-h);
+  height: calc(var(--header-h) + env(safe-area-inset-top, 0px));
   display: flex; align-items: center; gap: 14px;
-  padding: 0 14px;
+  padding: env(safe-area-inset-top, 0px)
+           calc(14px + env(safe-area-inset-right, 0px)) 0
+           calc(14px + env(safe-area-inset-left, 0px));
   background: var(--chrome-bg);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--chrome-edge);
@@ -129,7 +194,7 @@ header {
   cursor: pointer;
   white-space: nowrap;
 }
-.wordmark b { color: var(--pink); font-weight: 400; }
+.wordmark b { color: var(--pink-txt); font-weight: 400; }
 #stops-nav {
   display: flex; align-items: center; gap: 6px;
   overflow-x: auto;
@@ -141,7 +206,7 @@ header {
   font-size: 8px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--ink-body);
   background: var(--paper);
   border: 1px solid var(--line-2);
   border-radius: 999px;
@@ -166,7 +231,7 @@ a.chip { text-decoration: none; display: inline-block; }
   font-family: var(--font-pixel);
   font-size: 8px;
   letter-spacing: 0.05em;
-  color: var(--ink);
+  color: var(--ink-body);
   background: var(--paper);
   border: 1px solid var(--line-2);
   border-radius: 999px;
@@ -190,7 +255,7 @@ html.dark .mode-toggle .dot {
 footer {
   position: fixed; left: 0; right: 0; bottom: 0;
   display: flex; justify-content: center;
-  padding: 10px;
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
   pointer-events: none;
   z-index: 10;
 }
@@ -206,12 +271,13 @@ footer {
 }
 
 #hint {
-  position: fixed; left: 50%; bottom: 52px;
+  position: fixed; left: 50%;
+  bottom: calc(52px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%);
   font-family: var(--font-pixel);
   font-size: 9px;
   letter-spacing: 0.15em;
-  color: var(--ink);
+  color: var(--ink-body);
   background: var(--paper);
   border: 1px solid var(--line-2);
   padding: 9px 18px;
@@ -224,7 +290,9 @@ footer {
 
 /* ---------------- camera controls ---------------- */
 #camctl {
-  position: fixed; right: 14px; bottom: 46px;
+  position: fixed;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  bottom: calc(46px + env(safe-area-inset-bottom, 0px));
   display: flex; flex-direction: column; gap: 8px;
   z-index: 10;
 }
@@ -232,25 +300,48 @@ footer {
   width: 38px; height: 38px;
   font-family: var(--font-mono);
   font-size: 15px;
-  color: var(--ink);
+  color: var(--ink-body);
   background: var(--chrome-bg);
   border: 1px solid var(--line-2);
   border-radius: 10px;
   cursor: pointer;
+  touch-action: manipulation;
   box-shadow: var(--pane-shadow);
 }
 #camctl button:hover { color: var(--ink-body); border-color: var(--ink-2); }
-@media (pointer: coarse) { #camctl { display: none; } }
+/* The zoom rail used to be hidden on touch on the theory that pinch
+   replaces it. It does not: a pinch that starts on a card, or on a
+   browser that eats the gesture, leaves no way to zoom at all. So on
+   touch the rail stays and simply stacks above the next button. */
+@media (pointer: coarse) {
+  /* bottom left and lying down: a phone card is 319px wide inside a
+     375px screen, so a tall rail down either edge crosses the card it
+     is meant to help you read. Two buttons in a row clear it. */
+  #camctl {
+    right: auto;
+    left: calc(14px + env(safe-area-inset-left, 0px));
+    bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+    flex-direction: row;
+    gap: 10px;
+  }
+  #camctl button { width: 44px; height: 44px; font-size: 18px; }
+  /* every phone stop lands level (data-bearing-m is 0 everywhere), so
+     there is never anything to straighten out */
+  #lvl { display: none; }
+}
 
 #nextbtn {
   display: none;
-  position: fixed; right: 16px; bottom: 52px;
+  position: fixed;
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(52px + env(safe-area-inset-bottom, 0px));
   width: 52px; height: 52px;
   font-size: 22px;
   color: #fff;
-  background: var(--pink);
+  background: var(--action);
   border: 0; border-radius: 50%;
-  box-shadow: 0 10px 24px -10px rgba(239, 127, 177, .8);
+  touch-action: manipulation;
+  box-shadow: 0 10px 24px -10px rgba(194, 69, 111, .8);
   z-index: 10;
 }
 @media (pointer: coarse) { #nextbtn { display: block; } }
@@ -266,7 +357,7 @@ footer {
   font-size: 15px;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--ink-body);
   margin: 0 0 18px;
 }
 .home-title {
@@ -278,7 +369,7 @@ footer {
   color: var(--ink-body);
   margin: 0 0 30px;
 }
-.home-title b { color: var(--pink); font-weight: 400; }
+.home-title b { color: var(--pink-txt); font-weight: 400; }
 .home-blurb {
   font: 500 26px/1.45 var(--font-body);
   color: var(--ink-body);
@@ -303,7 +394,7 @@ footer {
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.2em;
-  color: var(--ink-2);
+  color: var(--ink-body);
 }
 
 /* the microprint: a whole page printed at 2% scale under the litany */
@@ -319,7 +410,7 @@ footer {
   margin: 0 0 12px;
   color: var(--ink-body);
 }
-.microprint h3 b { color: var(--gold); font-weight: 400; }
+.microprint h3 b { color: var(--gold-txt); font-weight: 400; }
 .microprint p {
   font: 500 16px/1.5 var(--font-body);
   margin: 0 0 8px;
@@ -328,7 +419,7 @@ footer {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.18em;
-  color: var(--ink);
+  color: var(--ink-body);
 }
 
 /* ---------------- windows ---------------- */
@@ -344,7 +435,7 @@ footer {
   height: 30px;
   padding: 0 8px 0 10px;
   background: var(--tbar, var(--silver));
-  color: #fff;
+  color: var(--tbar-ink);
 }
 .win-title .t {
   font-family: var(--font-pixel);
@@ -355,6 +446,7 @@ footer {
 }
 .win-title .b {
   width: 16px; height: 14px;
+  flex: 0 0 auto;
   background: var(--paper);
   border: 1px solid rgba(97, 85, 92, 0.35);
   font: 9px/12px var(--font-pixel);
@@ -382,10 +474,12 @@ footer {
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--ink-body);
 }
 
-/* manifesto rules */
+/* manifesto rules. Also reused by op002_tracks.txt, where the .n column
+   holds the track name instead of a rule number. */
+.manifesto-win { width: 860px; }
 .rules { margin-top: 18px; border-top: 1px solid var(--line); }
 .rules div {
   display: flex; align-items: baseline; gap: 14px;
@@ -396,7 +490,7 @@ footer {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.2em;
-  color: var(--rc, var(--pink));
+  color: var(--rc, var(--pink-txt));
 }
 .rules .r {
   font-family: var(--font-display);
@@ -407,6 +501,9 @@ footer {
 
 /* ---------------- op event windows ---------------- */
 .op-win { width: 430px; }
+/* the operation that is actually next: the only op card with a poster,
+   a date line and a call to action, so it gets a little more room */
+.op-next { width: 470px; }
 .op-win img {
   display: block;
   width: 100%;
@@ -426,6 +523,9 @@ footer {
   color: var(--ink-body);
   margin: 0 0 12px;
 }
+.op-win .mono { font-size: 10px; display: block; margin: 0 0 10px; }
+/* the partner line on the next op. Named partners only, once signed. */
+.op-win .partners { color: var(--ink-body); margin: 14px 0 12px; }
 .status {
   display: inline-block;
   font-family: var(--font-pixel);
@@ -434,20 +534,75 @@ footer {
   text-transform: uppercase;
   padding: 6px 10px;
   border: 1px solid var(--line-2);
-  color: var(--ink);
+  color: var(--ink-body);
 }
-.status.live { border-color: var(--sc, var(--pink)); color: var(--sc, var(--pink)); }
+.status.live { border-color: var(--sc, var(--pink-txt)); color: var(--sc, var(--pink-txt)); }
+
+/* ---------------- partners ----------------
+   The logo ships as a single flat #272726 mark, so dark mode just
+   inverts it rather than needing a second file. */
+.partners-win { width: 430px; }
+.partners-win .win-body { padding: 20px 22px 18px; }
+.partners-win img {
+  display: block;
+  width: 62%;
+  max-width: 250px;
+  margin: 0 0 14px;
+}
+html.dark .partners-win img { filter: invert(1); }
+.partners-win .mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-body);
+  margin: 0;
+}
+
+/* ---------------- final standings of a past op ----------------
+   Winner is marked with a tinted row rather than gold text: gold on
+   paper is too faint to read at the sizes this card gets flown to. */
+.standings-win { width: 430px; }
+.standings { margin-top: 14px; border-top: 1px solid var(--line); }
+.standings div {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 7px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.standings .pl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-body);
+}
+.standings .nm {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.25;
+  text-transform: lowercase;
+  color: var(--ink-body);
+}
+.standings .ct {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-body);
+}
+.standings .first {
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+}
+.standings .first .pl, .standings .first .ct { color: var(--ink-body); }
 
 /* ops cluster headline printed on the desktop behind the windows */
 .ops-head {
   font-family: var(--font-display);
   font-size: 90px;
   text-transform: lowercase;
-  color: var(--ink-2);
+  color: var(--ink);
   white-space: nowrap;
   pointer-events: none;
 }
-.ops-head b { color: var(--pink); font-weight: 400; }
+.ops-head b { color: var(--pink-txt); font-weight: 400; }
 
 /* ---------------- crew ---------------- */
 .crew-win { width: 620px; }
@@ -469,8 +624,35 @@ footer {
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--cc, var(--ink));
+  color: var(--cc, var(--ink-body));
 }
+
+/* ---------------- socials ---------------- */
+.socials-win { width: 470px; }
+.socials { border-top: 1px solid var(--line); }
+.socials a {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.socials a:hover { background: var(--sunken); }
+.socials .w {
+  font-family: var(--font-display);
+  font-size: 18px;
+  text-transform: lowercase;
+  color: var(--ink-body);
+}
+.socials a:hover .w { color: var(--pink-txt); }
+.socials .h {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-body);
+  text-align: right;
+}
+.socials-win .mono { margin: 14px 0 0; }
 
 /* ---------------- desktop decoration ---------------- */
 .deco { pointer-events: none; }
@@ -480,7 +662,7 @@ footer {
 .wallpaper-win .cap {
   font-family: var(--font-pixel);
   font-size: 8px;
-  color: var(--ink);
+  color: var(--ink-body);
   padding: 8px 10px;
 }
 
@@ -492,7 +674,7 @@ footer {
   font-size: 11px;
   line-height: 1.4;
   color: #fff;
-  background: var(--pink);
+  background: var(--action);
   border: 1px solid var(--line-2);
   box-shadow: 3px 3px 0 var(--ink-body);
   padding: 15px 16px;
@@ -505,6 +687,15 @@ footer {
   box-shadow: 4px 4px 0 var(--ink-body);
   filter: brightness(1.06);
 }
+/* the second button on a card: same shape, quieter, so one call to
+   action always wins */
+.luma-btn.ghost {
+  color: var(--ink-body);
+  background: var(--paper);
+  border-color: var(--ink-2);
+  box-shadow: 3px 3px 0 var(--line-2);
+}
+.luma-btn.ghost:hover { box-shadow: 4px 4px 0 var(--line-2); }
 .luma-btn .sub {
   display: block;
   margin-top: 8px;
@@ -512,7 +703,7 @@ footer {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: 0.85;
+  /* no opacity: at 10px it has to stay at full contrast */
 }
 /* the slopathon signup card: bigger than every other window on the
    desktop and the only one with a pink border + a slow pulse, so it
@@ -536,7 +727,7 @@ footer {
 .announce-win .luma-btn { font-size: 15px; padding: 20px; }
 .announce-win .luma-btn .sub { font-size: 12px; }
 
-/* ---------------- op//002 vote widget ---------------- */
+/* ---------------- vote widget (kept for the next op) ---------------- */
 .vote-win { width: 500px; }
 .vote-win .win-body { padding: 28px 28px 30px; }
 .vote-h {
@@ -804,20 +995,77 @@ noscript .ns {
 }
 
 @media (max-width: 640px) {
-  .wordmark { font-size: 13px; }
-  .chip { padding: 5px 10px; font-size: 10px; }
+  /* the taskbar is 375px wide and has to hold a wordmark, six stop
+     chips and the theme switch. The switch drops its label and the
+     wordmark shrinks, which buys the scrolling chip strip about 100px
+     more room; without this only one chip was ever visible. */
+  header { gap: 8px; }
+  .wordmark { font-size: 11px; padding: 6px 4px; }
+  /* 34px tall chips inside a 52px bar: thumb sized, was 24px */
+  .chip { padding: 10px 12px; font-size: 9px; }
+  #stops-nav { gap: 5px; }
+  .mode-toggle { padding: 10px; gap: 0; }
+  .mode-toggle #modelbl { display: none; }
   #hud { font-size: 9px; }
 
-  /* portrait home: the hero column narrows from 1500 to 560 world
-     units so the camera's portrait frame (see the home stop's
-     data-*-m) can show it at a readable size, with the signup card
-     parked directly below. Nothing is hidden, only rescaled. */
-  .stop-home { width: 560px; }
-  .home-tag { font-size: 12px; letter-spacing: 0.28em; margin: 0 0 10px; }
-  .home-title { font-size: 44px; margin: 0 0 16px; }
-  .home-blurb { font-size: 18px; margin: 0 0 20px; }
-  .runs-list span { font-size: 24px; }
-  .home-foot { font-size: 11px; margin-top: 20px; }
+  /* ============================================================
+     THE PHONE WORLD IS DRAWN AT 1:1
+     Every stop carries data-vw-m 335, which lands the camera at
+     roughly scale 1.0 on a 375pt phone (0.85 * 375 / 335). So one
+     world unit here is about one screen pixel, and the numbers below
+     can be read as ordinary mobile CSS: a 340 wide card really is a
+     340px card, 16px body copy really is 16px.
+     Before this the same cards were framed 1500 to 2100 units wide
+     and rendered at scale 0.15 to 0.47, which is why everything had
+     to be pinched to be read.
+     ============================================================ */
+  /* the hero and the announce card have to stack inside one phone
+     screen, minus the 52px taskbar, so this column is measured, not
+     guessed: 401 + 14 + 302 world units against the roughly 805 the
+     camera shows under the header. Changing a size here, or adding a
+     button to the announce card, means re-measuring and re-tuning
+     data-y-m on the card below it. */
+  .stop-home { width: 340px; }
+  .home-tag { font-size: 10px; letter-spacing: 0.24em; margin: 0 0 8px; }
+  .home-title { font-size: 40px; margin: 0 0 10px; }
+  .home-blurb { font-size: 15px; line-height: 1.45; margin: 0 0 14px; }
+  .runs-list { gap: 1px; }
+  .runs-list span { font-size: 14px; }
+  .home-foot { font-size: 10px; margin-top: 12px; }
+
+  /* windows: one column width for every card on the phone */
+  .announce-win,
+  .op-win, .op-next,
+  .partners-win, .standings-win,
+  .socials-win,
+  .manifesto-win, .crew-win { width: 340px; }
+  .socials .w { font-size: 16px; }
+  .socials .h { font-size: 10px; }
+
+  .win-body { padding: 18px 18px 20px; }
+  .win h2 { font-size: 28px; margin: 0 0 14px; }
+  .win p { font-size: 15px; }
+  .rules .r { font-size: 15px; }
+  .crew-rows .nm { font-size: 16px; }
+  .crew-rows .rl { font-size: 9px; }
+  .op-win .win-body { padding: 14px 16px 18px; }
+  .op-win h3 { font-size: 22px; }
+  .op-win p { font-size: 14px; }
+  /* the posters are portrait, so at full width they alone are taller
+     than a phone screen. Crop to the top third, where the poster does
+     its shouting; the dates and the numbers are in the copy below. */
+  .op-win img { max-height: 250px; object-fit: cover; object-position: 50% 12%; }
+  .standings .nm { font-size: 13px; }
+  .ops-head { font-size: 42px; }
+
+  .announce-win .win-body { padding: 20px 18px 22px; }
+  .announce-win h2 { font-size: 30px; }
+  .announce-win p.mono { font-size: 10px; }
+  .announce-win .win-body > p:not(.mono) { font-size: 15px; line-height: 1.5; }
+  .announce-win .luma-btn { font-size: 11px; padding: 15px 14px; }
+  .announce-win .luma-btn .sub { font-size: 9px; margin-top: 6px; }
+  .luma-btn { font-size: 10px; padding: 14px 12px; margin-top: 12px; }
+  .luma-btn .sub { font-size: 9px; margin-top: 6px; }
 
   /* the ascii pyramid gets its own small card below the signup card,
      not the full desktop size, but present and legibly animating */
