@@ -22,7 +22,7 @@ Jeder Block hat einen Kommentar als Ueberschrift:
 | Ankuendigung | `announcement dialog` | Die grosse Karte auf der Startseite. Zeigt immer auf die NAECHSTE Operation |
 | Easter Egg | `MICROPRINT` | Der Mini-Text, den man nur mit Zoom findet |
 | Manifest | `03 MANIFESTO` | Unser Selbstverstaendnis + die vier Regeln |
-| Kommende Events | `04 OPERATIONS` | Bare Metal, Tracks, Partner, alles in Planung |
+| Kommende Events | `04 OPERATIONS` | OP002 hardware jam (Titel noch TBD), Tracks, Partner, alles in Planung |
 | Vergangene Events | `05 PAST OPS` | Slopathon + Endstand. Hier landet jede fertige Operation |
 | Team | `06 CREW` | Namen und Rollen |
 | Socials | `socials:` | LinkedIn, Instagram, GitHub, lu.ma, Foto-Hinweis |
@@ -39,9 +39,10 @@ die Zeile
 
 anpassen. `class="status live"` = farbig hervorgehoben, `class="status"` = grau.
 
-**Anmelde-Link setzen**: der Button auf der Bare-Metal-Karte und auf der
+**Anmelde-Link setzen**: der Button auf der OP002-Karte und auf der
 Startseite zeigt auf `https://luma.com/user/hackops`. Sobald das echte Event auf
 lu.ma steht, beide Stellen auf die Event-URL aendern (nach `luma.com` suchen).
+Der interne Codename ist Bare Metal; den nicht als oeffentlichen Titel verwenden.
 
 **Neues Crew-Mitglied**: im `06 CREW` Block eine Zeile kopieren und anpassen:
 
