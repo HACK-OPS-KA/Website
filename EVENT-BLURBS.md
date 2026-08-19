@@ -29,13 +29,16 @@ aendern, sonst laufen die beiden auseinander.
 
 ---
 
-## op//002 bare metal (Standardtext)
+## op//002 hardware jam (Standardtext)
 
-> **BARE METAL — the hardware hackathon**
-> 03.12 - 06.12.2026 · Karlsruhe · free
+Internal code name is Bare Metal. Do not use that as the public title; the
+public name is still TBD. Copy below is the locked public framing.
+
+> **op//002 — the hardware hackathon**
+> 04.12 - 06.12.2026 · Karlsruhe · free
 >
 > Solder, sensors, silicon. If it does not physically exist, it does not count.
-> Four days, 100 builders, everyone welcome. Something has to move, light up,
+> Three days, 100 builders, everyone welcome. Something has to move, light up,
 > sense or actuate, and you demo it live at the end.
 >
 > Two tracks: **open**, build anything as long as it is real, and **power**, where
@@ -48,9 +51,9 @@ aendern, sonst laufen die beiden auseinander.
 > With KIT nova and KAIRA. Organised by hack//ops.
 > hackops.tech
 
-## op//002 bare metal (eine Zeile)
+## op//002 hardware jam (eine Zeile)
 
-> BARE METAL, the hardware hackathon: 03.12 - 06.12.2026 in Karlsruhe, 100
+> op//002, the hardware hackathon: 04.12 - 06.12.2026 in Karlsruhe, 100
 > builders, free. If it does not physically exist, it does not count.
 > hackops.tech
 
