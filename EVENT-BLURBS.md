@@ -31,10 +31,10 @@ aendern, sonst laufen die beiden auseinander.
 
 ## op//002 hardware jam (Standardtext)
 
-Internal code name is Bare Metal. Do not use that as the public title; the
+Internal code name is bare metal. Do not use that as the public title; the
 public name is still TBD. Copy below is the locked public framing.
 
-> **op//002 — the hardware hackathon**
+> **op//002 · the hardware hackathon**
 > 04.12 - 06.12.2026 · Karlsruhe · free
 >
 > Solder, sensors, silicon. If it does not physically exist, it does not count.
