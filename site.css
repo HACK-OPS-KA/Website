@@ -501,8 +501,8 @@ footer {
 
 /* ---------------- op event windows ---------------- */
 .op-win { width: 430px; }
-/* the operation that is actually next: the only op card with a poster,
-   a date line and a call to action, so it gets a little more room */
+/* the operation that is actually next: the only op card with a date
+   line and a call to action, so it gets a little more room */
 .op-next { width: 470px; }
 .op-win img {
   display: block;

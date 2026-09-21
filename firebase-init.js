@@ -1,6 +1,5 @@
 // shared Firebase bootstrap for vote.js and admin.html.
-// TODO(setup): replace with the real values from
-// Firebase Console > Project settings > General > Your apps > Web app.
+// Values come from Firebase Console > Project settings > General > Your apps > Web app.
 // These are public client identifiers, not secrets -- Firestore Security
 // Rules (see firestore.rules) are what actually protects the data.
 export const firebaseConfig = {
@@ -18,7 +17,7 @@ export const firebaseConfig = {
 // was being planned; the site now calls it op//001, matching the poster
 // and the archive. Do not "fix" the string: it is the live Firestore
 // path holding the real slopathon results. The next event gets its own
-// id, e.g. "op002-bare-metal".
+// id, e.g. "op002".
 export const EVENT_ID = "op002-slopathon";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";

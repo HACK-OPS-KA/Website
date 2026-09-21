@@ -24,8 +24,8 @@ slopathon and is kept, unmounted, for the next operation.
 ### Operation numbering
 
 Slopathon is **op//001** and the next operation is **op//002** (internal code
-name: bare metal; public title still TBD). That matches the printed poster and
-the archive. An earlier planning order had them the other way around, which is
+name: bare metal; public title still TBD). That matches the archive. An
+earlier planning order had them the other way around, which is
 why `firebase-init.js` still holds `EVENT_ID = "op002-slopathon"`: it is a live
 Firestore path with the real results under it and must not be renamed. Do not
 put the internal code name in user-visible copy.

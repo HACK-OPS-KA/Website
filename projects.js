@@ -1,4 +1,4 @@
-/* the slop museum — loads projects.json and paints the archive.
+/* the slop museum: loads projects.json and paints the archive.
    remote-first (auto-updates as PRs merge), local copy as fallback. */
 (function () {
   'use strict';
@@ -98,7 +98,7 @@
       }).join('');
 
       var cursed = p.cursed
-        ? '<p class="cursed"><span class="lbl">why it shouldn’t exist —</span> ' + esc(p.cursed) + '</p>'
+        ? '<p class="cursed"><span class="lbl">why it shouldn’t exist:</span> ' + esc(p.cursed) + '</p>'
         : '';
 
       card.innerHTML =
