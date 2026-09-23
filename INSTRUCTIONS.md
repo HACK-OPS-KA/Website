@@ -23,12 +23,12 @@ slopathon and is kept, unmounted, for the next operation.
 
 ### Operation numbering
 
-Slopathon is **op//001** and the next operation is **op//002** (internal code
-name: bare metal; public title still TBD). That matches the archive. An
+Slopathon is **op//001** and the next operation is **op//002** (Physical AI
+Hackathon, 26 September 2026 in Stuttgart). That matches the archive. An
 earlier planning order had them the other way around, which is
 why `firebase-init.js` still holds `EVENT_ID = "op002-slopathon"`: it is a live
-Firestore path with the real results under it and must not be renamed. Do not
-put the internal code name in user-visible copy.
+Firestore path with the real results under it and must not be renamed. The
+postponed hardware jam copy must not be reused for this event.
 
 ### File map
 
@@ -83,7 +83,7 @@ Each block is marked with a comment heading:
 | Announcement | `announcement dialog` | The pulsing card on the home view. Always points at the next operation |
 | Easter egg | `MICROPRINT` | Hidden microprint, reachable by typing "slop" or clicking the pyramid 5 times |
 | Manifesto | `03 MANIFESTO` | Self description and the four rules |
-| Operations | `04 OPERATIONS` | The next event, its tracks and partners, plus everything in planning |
+| Operations | `04 OPERATIONS` | The next event and the formats still in planning |
 | Past ops | `05 PAST OPS` | Finished operations with their dates, links and final standings |
 | Crew | `06 CREW` | Names and roles |
 | Socials | `socials:` | LinkedIn, Instagram, GitHub, lu.ma, photo notice, contact address |

@@ -29,33 +29,29 @@ aendern, sonst laufen die beiden auseinander.
 
 ---
 
-## op//002 hardware jam (Standardtext)
+## op//002 physical ai hackathon (Standardtext)
 
-Internal code name is bare metal. Do not use that as the public title; the
-public name is still TBD. Copy below is the locked public framing.
+Facts checked against the [event page](https://luma.com/gw4tvnff) and the
+supplied poster on 23.09.2026. The exact address is shown after registration;
+do not publish a guessed venue or a changing number of remaining places.
 
-> **op//002 · the hardware hackathon**
-> 04.12 - 06.12.2026 · Karlsruhe · free
+> **physical ai hackathon**
+> Saturday 26.09.2026 · 10:00–17:00 · Stuttgart
 >
-> Solder, sensors, silicon. If it does not physically exist, it does not count.
-> Three days, 100 builders, everyone welcome. Something has to move, light up,
-> sense or actuate, and you demo it live at the end.
+> Spend a day tinkering with robots, including Reachy Minis. Bring your own
+> hardware if you have it. You do not need previous hardware experience.
 >
-> Two tracks: **open**, build anything as long as it is real, and **power**, where
-> every team solves the same problem and the winner is decided by a measurable
-> result rather than a pitch.
+> Build during the day, then show working hardware in live demos. No pitch
+> decks, no slides.
 >
-> Hardware and in-kind prizes, no cash. We are here to build a scene, not to farm
-> hackathon prize money.
->
-> With KIT nova and KAIRA. Organised by hack//ops.
-> hackops.tech
+> Hosted by HACK//OPS. Request to join; registration requires approval.
+> https://luma.com/gw4tvnff
 
-## op//002 hardware jam (eine Zeile)
+## op//002 physical ai hackathon (eine Zeile)
 
-> op//002, the hardware hackathon: 04.12 - 06.12.2026 in Karlsruhe, 100
-> builders, free. If it does not physically exist, it does not count.
-> hackops.tech
+> Physical AI Hackathon: Saturday 26.09.2026, 10:00–17:00 in Stuttgart.
+> Build with robots and demo live hardware. Request to join:
+> https://luma.com/gw4tvnff
 
 ---
 

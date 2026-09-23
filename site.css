@@ -477,8 +477,7 @@ footer {
   color: var(--ink-body);
 }
 
-/* manifesto rules. Also reused by op002_tracks.txt, where the .n column
-   holds the track name instead of a rule number. */
+/* manifesto rules. */
 .manifesto-win { width: 860px; }
 .rules { margin-top: 18px; border-top: 1px solid var(--line); }
 .rules div {
@@ -666,7 +665,7 @@ html.dark .partners-win img { filter: invert(1); }
   padding: 8px 10px;
 }
 
-/* ---------------- slopathon signup CTA ---------------- */
+/* ---------------- event signup CTA ---------------- */
 .luma-btn {
   display: block;
   text-align: center;
@@ -705,7 +704,7 @@ html.dark .partners-win img { filter: invert(1); }
   text-transform: uppercase;
   /* no opacity: at 10px it has to stay at full contrast */
 }
-/* the slopathon signup card: bigger than every other window on the
+/* the next event signup card: bigger than every other window on the
    desktop and the only one with a pink border + a slow pulse, so it
    reads as "look here" at a glance, at any camera scale */
 .announce-win {
@@ -1019,19 +1018,15 @@ noscript .ns {
      and rendered at scale 0.15 to 0.47, which is why everything had
      to be pinched to be read.
      ============================================================ */
-  /* the hero and the announce card have to stack inside one phone
-     screen, minus the 52px taskbar, so this column is measured, not
-     guessed: 401 + 14 + 302 world units against the roughly 805 the
-     camera shows under the header. Changing a size here, or adding a
-     button to the announce card, means re-measuring and re-tuning
-     data-y-m on the card below it. */
+  /* the hero and announcement stack in the home column. Keep the
+     pyramid below them when changing either card's copy. */
   .stop-home { width: 340px; }
   .home-tag { font-size: 10px; letter-spacing: 0.24em; margin: 0 0 8px; }
   .home-title { font-size: 40px; margin: 0 0 10px; }
-  .home-blurb { font-size: 15px; line-height: 1.45; margin: 0 0 14px; }
+  .home-blurb { font-size: 14px; line-height: 1.4; margin: 0 0 12px; }
   .runs-list { gap: 1px; }
-  .runs-list span { font-size: 14px; }
-  .home-foot { font-size: 10px; margin-top: 12px; }
+  .runs-list span { font-size: 13px; line-height: 1.1; }
+  .home-foot { font-size: 10px; margin-top: 7px; }
 
   /* windows: one column width for every card on the phone */
   .announce-win,
@@ -1055,6 +1050,7 @@ noscript .ns {
      than a phone screen. Crop to the top third, where the poster does
      its shouting; the dates and the numbers are in the copy below. */
   .op-win img { max-height: 250px; object-fit: cover; object-position: 50% 12%; }
+  .physical-ai-win img { max-height: none; object-fit: contain; }
   .standings .nm { font-size: 13px; }
   .ops-head { font-size: 42px; }
 
