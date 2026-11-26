@@ -1,0 +1,625 @@
+{
+  "total": 117,
+  "skip": [
+    "op002_18"
+  ],
+  "ops": [
+    {
+      "id": "op003",
+      "code": "OP003",
+      "place": "Karlsruhe",
+      "count": 35,
+      "photos": [
+        {
+          "id": "op003_01",
+          "src": "/assets/photos/op003/op003_01-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_02",
+          "src": "/assets/photos/op003/op003_02-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_03",
+          "src": "/assets/photos/op003/op003_03-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_04",
+          "src": "/assets/photos/op003/op003_04-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_05",
+          "src": "/assets/photos/op003/op003_05-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_06",
+          "src": "/assets/photos/op003/op003_06-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_07",
+          "src": "/assets/photos/op003/op003_07-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_08",
+          "src": "/assets/photos/op003/op003_08-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_09",
+          "src": "/assets/photos/op003/op003_09-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_10",
+          "src": "/assets/photos/op003/op003_10-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_11",
+          "src": "/assets/photos/op003/op003_11-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_12",
+          "src": "/assets/photos/op003/op003_12-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_13",
+          "src": "/assets/photos/op003/op003_13-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_14",
+          "src": "/assets/photos/op003/op003_14-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_15",
+          "src": "/assets/photos/op003/op003_15-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_16",
+          "src": "/assets/photos/op003/op003_16-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_17",
+          "src": "/assets/photos/op003/op003_17-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_18",
+          "src": "/assets/photos/op003/op003_18-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_19",
+          "src": "/assets/photos/op003/op003_19-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_20",
+          "src": "/assets/photos/op003/op003_20-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_21",
+          "src": "/assets/photos/op003/op003_21-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_22",
+          "src": "/assets/photos/op003/op003_22-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_23",
+          "src": "/assets/photos/op003/op003_23-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_24",
+          "src": "/assets/photos/op003/op003_24-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_25",
+          "src": "/assets/photos/op003/op003_25-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_26",
+          "src": "/assets/photos/op003/op003_26-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_27",
+          "src": "/assets/photos/op003/op003_27-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_28",
+          "src": "/assets/photos/op003/op003_28-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_29",
+          "src": "/assets/photos/op003/op003_29-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_30",
+          "src": "/assets/photos/op003/op003_30-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_31",
+          "src": "/assets/photos/op003/op003_31-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_32",
+          "src": "/assets/photos/op003/op003_32-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_33",
+          "src": "/assets/photos/op003/op003_33-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_34",
+          "src": "/assets/photos/op003/op003_34-800.webp",
+          "code": "OP003"
+        },
+        {
+          "id": "op003_35",
+          "src": "/assets/photos/op003/op003_35-800.webp",
+          "code": "OP003"
+        }
+      ]
+    },
+    {
+      "id": "op0k4",
+      "code": "OP0K4",
+      "place": "Karlsruhe \u00b7 Game Jam",
+      "count": 23,
+      "photos": [
+        {
+          "id": "karlsruhe_01",
+          "src": "/assets/photos/gamejam/karlsruhe_01-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_02",
+          "src": "/assets/photos/gamejam/karlsruhe_02-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_03",
+          "src": "/assets/photos/gamejam/karlsruhe_03-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_04",
+          "src": "/assets/photos/gamejam/karlsruhe_04-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_05",
+          "src": "/assets/photos/gamejam/karlsruhe_05-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_06",
+          "src": "/assets/photos/gamejam/karlsruhe_06-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_07",
+          "src": "/assets/photos/gamejam/karlsruhe_07-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_08",
+          "src": "/assets/photos/gamejam/karlsruhe_08-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_09",
+          "src": "/assets/photos/gamejam/karlsruhe_09-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_10",
+          "src": "/assets/photos/gamejam/karlsruhe_10-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_11",
+          "src": "/assets/photos/gamejam/karlsruhe_11-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_12",
+          "src": "/assets/photos/gamejam/karlsruhe_12-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_13",
+          "src": "/assets/photos/gamejam/karlsruhe_13-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_14",
+          "src": "/assets/photos/gamejam/karlsruhe_14-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_15",
+          "src": "/assets/photos/gamejam/karlsruhe_15-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_16",
+          "src": "/assets/photos/gamejam/karlsruhe_16-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_17",
+          "src": "/assets/photos/gamejam/karlsruhe_17-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_18",
+          "src": "/assets/photos/gamejam/karlsruhe_18-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_19",
+          "src": "/assets/photos/gamejam/karlsruhe_19-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_20",
+          "src": "/assets/photos/gamejam/karlsruhe_20-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_21",
+          "src": "/assets/photos/gamejam/karlsruhe_21-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_22",
+          "src": "/assets/photos/gamejam/karlsruhe_22-800.webp",
+          "code": "OP0K4"
+        },
+        {
+          "id": "karlsruhe_23",
+          "src": "/assets/photos/gamejam/karlsruhe_23-800.webp",
+          "code": "OP0K4"
+        }
+      ]
+    },
+    {
+      "id": "op0m4",
+      "code": "OP0M4",
+      "place": "M\u00fcnchen \u00b7 Game Jam",
+      "count": 41,
+      "photos": [
+        {
+          "id": "muenchen_01",
+          "src": "/assets/photos/gamejam/muenchen_01-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_02",
+          "src": "/assets/photos/gamejam/muenchen_02-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_03",
+          "src": "/assets/photos/gamejam/muenchen_03-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_04",
+          "src": "/assets/photos/gamejam/muenchen_04-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_05",
+          "src": "/assets/photos/gamejam/muenchen_05-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_06",
+          "src": "/assets/photos/gamejam/muenchen_06-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_07",
+          "src": "/assets/photos/gamejam/muenchen_07-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_08",
+          "src": "/assets/photos/gamejam/muenchen_08-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_09",
+          "src": "/assets/photos/gamejam/muenchen_09-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_10",
+          "src": "/assets/photos/gamejam/muenchen_10-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_11",
+          "src": "/assets/photos/gamejam/muenchen_11-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_12",
+          "src": "/assets/photos/gamejam/muenchen_12-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_13",
+          "src": "/assets/photos/gamejam/muenchen_13-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_14",
+          "src": "/assets/photos/gamejam/muenchen_14-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_15",
+          "src": "/assets/photos/gamejam/muenchen_15-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_16",
+          "src": "/assets/photos/gamejam/muenchen_16-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_17",
+          "src": "/assets/photos/gamejam/muenchen_17-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_18",
+          "src": "/assets/photos/gamejam/muenchen_18-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_19",
+          "src": "/assets/photos/gamejam/muenchen_19-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_20",
+          "src": "/assets/photos/gamejam/muenchen_20-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_21",
+          "src": "/assets/photos/gamejam/muenchen_21-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_22",
+          "src": "/assets/photos/gamejam/muenchen_22-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_23",
+          "src": "/assets/photos/gamejam/muenchen_23-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_24",
+          "src": "/assets/photos/gamejam/muenchen_24-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_25",
+          "src": "/assets/photos/gamejam/muenchen_25-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_26",
+          "src": "/assets/photos/gamejam/muenchen_26-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_27",
+          "src": "/assets/photos/gamejam/muenchen_27-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_28",
+          "src": "/assets/photos/gamejam/muenchen_28-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_29",
+          "src": "/assets/photos/gamejam/muenchen_29-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_30",
+          "src": "/assets/photos/gamejam/muenchen_30-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_31",
+          "src": "/assets/photos/gamejam/muenchen_31-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_32",
+          "src": "/assets/photos/gamejam/muenchen_32-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_33",
+          "src": "/assets/photos/gamejam/muenchen_33-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_34",
+          "src": "/assets/photos/gamejam/muenchen_34-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_35",
+          "src": "/assets/photos/gamejam/muenchen_35-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_36",
+          "src": "/assets/photos/gamejam/muenchen_36-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_37",
+          "src": "/assets/photos/gamejam/muenchen_37-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_38",
+          "src": "/assets/photos/gamejam/muenchen_38-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_39",
+          "src": "/assets/photos/gamejam/muenchen_39-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_40",
+          "src": "/assets/photos/gamejam/muenchen_40-800.webp",
+          "code": "OP0M4"
+        },
+        {
+          "id": "muenchen_41",
+          "src": "/assets/photos/gamejam/muenchen_41-800.webp",
+          "code": "OP0M4"
+        }
+      ]
+    },
+    {
+      "id": "op002",
+      "code": "OP002",
+      "place": "Stuttgart",
+      "count": 18,
+      "photos": [
+        {
+          "id": "op002_01",
+          "src": "/assets/photos/op002/op002_01-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_02",
+          "src": "/assets/photos/op002/op002_02-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_03",
+          "src": "/assets/photos/op002/op002_03-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_04",
+          "src": "/assets/photos/op002/op002_04-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_05",
+          "src": "/assets/photos/op002/op002_05-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_06",
+          "src": "/assets/photos/op002/op002_06-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_07",
+          "src": "/assets/photos/op002/op002_07-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_08",
+          "src": "/assets/photos/op002/op002_08-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_09",
+          "src": "/assets/photos/op002/op002_09-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_10",
+          "src": "/assets/photos/op002/op002_10-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_11",
+          "src": "/assets/photos/op002/op002_11-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_12",
+          "src": "/assets/photos/op002/op002_12-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_13",
+          "src": "/assets/photos/op002/op002_13-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_14",
+          "src": "/assets/photos/op002/op002_14-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_15",
+          "src": "/assets/photos/op002/op002_15-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_16",
+          "src": "/assets/photos/op002/op002_16-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_17",
+          "src": "/assets/photos/op002/op002_17-800.webp",
+          "code": "OP002"
+        },
+        {
+          "id": "op002_19",
+          "src": "/assets/photos/op002/op002_19-800.webp",
+          "code": "OP002"
+        }
+      ]
+    }
+  ]
+}

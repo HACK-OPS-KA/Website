@@ -39,6 +39,8 @@ under it and must not be renamed.
 | `home.css` | All styling for `index.html`, `photos.html` and `projects.html`. Colours are the variables in `.hp` at the top. |
 | `home.js` | Front page behaviour: the 3D hero, slide-open rows, counting numbers, reel buttons. The page works without it. |
 | `photos.html` | Photo and privacy notice for event photography. Keep the URL: event pages link to it. |
+| `floor.html` | Public photo gallery (`/floor.html`): one 35 mm strip per op. Built by `python3 scripts/build-floor.py` after adding files under `assets/photos/`. |
+| `floor.js` | Op filter chips on `floor.html` (`?op=op003` deep links). |
 | `projects.html` | The slop museum, the op//001 archive (a snapshot of the SLOPATHON repo's projects.json). |
 | `assets/home/` | Everything the new pages show: sky, 3D pyramid, partner logos, op key visuals, game covers. |
 | `assets/vendor/three/` | three.js r169 (MIT), loaded through the import map in `index.html`. |
