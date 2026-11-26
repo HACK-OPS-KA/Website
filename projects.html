@@ -1,85 +1,407 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>the slop museum · hack//ops</title>
-<meta name="description" content="Every project built at SLOPATHON OP001. The gloriously cursed, over-engineered, useless-but-working archive from HACK//OPS Karlsruhe." />
-<meta property="og:title" content="the slop museum · op001 archive" />
-<meta property="og:type" content="website" />
-<meta property="og:description" content="Every gloriously cursed prototype built at SLOPATHON OP001, in one place." />
-<meta property="og:image" content="https://hackops.tech/assets/op001-slopathon.jpg" />
-<meta property="og:url" content="https://hackops.tech/projects.html" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Press+Start+2P&family=Hanken+Grotesk:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet" />
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="preload" href="assets/good-times.otf" as="font" type="font/otf" crossorigin />
-<link rel="stylesheet" href="projects.css?v=2" />
-<script>
-  /* apply saved theme before first paint; shared key with the main desktop */
-  (function () {
-    try {
-      var t = localStorage.getItem('hackops-theme');
-      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      }
-    } catch (e) {}
-  })();
-</script>
-</head>
-<body>
-
-<div class="bar">
-  <a class="back" href="/">‹ back to desktop</a>
-  <a class="brand" href="/">hack//ops</a>
-  <span class="spacer"></span>
-  <span class="tag">op001 · the archive</span>
-  <button class="toggle" id="themeToggle" title="toggle lights" aria-label="toggle dark mode">◐</button>
-</div>
-
-<header class="hero">
-  <p class="kicker">slopathon · op001 · karlsruhe</p>
-  <h1>the slop museum</h1>
-  <p>Every project built at SLOPATHON OP001: the gloriously cursed, over-engineered,
-     useless-but-working prototypes. Built in one room, on purpose, the wrong way.
-     Click any window to open the exhibit.</p>
-  <div class="meta">
-    <span class="count" id="count"><b>…</b> exhibits</span>
-    <span>·</span>
-    <a href="https://github.com/HACK-OPS-KA/SLOPATHON" target="_blank" rel="noopener">source repo ↗</a>
-  </div>
-</header>
-
-<div class="filter">
-  <label class="sr-only" for="filter">filter the archive</label>
-  <input id="filter" type="search" placeholder="filter by name, team, keyword…"
-         autocomplete="off" aria-label="filter the archive by name, team or keyword" />
-</div>
-
-<main class="grid" id="grid" aria-live="polite"></main>
-
-<footer>
-  the archive rebuilds itself whenever a submission is merged ·
-  <a href="https://github.com/HACK-OPS-KA/SLOPATHON" target="_blank" rel="noopener">HACK-OPS-KA/SLOPATHON</a>
-  <br />
-  <!-- keep this list identical to the socials card on the desktop -->
-  <a href="/">the desktop</a> ·
-  <a href="/photos.html">photo notice</a> ·
-  <a href="https://www.linkedin.com/company/hack-ops/" target="_blank" rel="me noopener">linkedin</a> ·
-  <a href="https://www.instagram.com/hackops.tech" target="_blank" rel="me noopener">instagram</a> ·
-  <a href="https://github.com/HACK-OPS-KA" target="_blank" rel="me noopener">github</a>
-</footer>
-
-<!-- exhibit modal -->
-<div class="modal-back" id="modalBack" role="dialog" aria-modal="true">
-  <div class="modal">
-    <div class="tbar"><span class="t" id="mTitle">exhibit</span><button class="x" id="mClose" aria-label="close">×</button></div>
-    <div class="mbody" id="mBody"></div>
-  </div>
-</div>
-
-<script src="projects.js?v=1"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>HACK//OPS · The slop museum</title>
+    <meta name="description" content="Everything built at OP001 Slopathon, ranked by the final vote." />
+    <meta property="og:title" content="HACK//OPS · The slop museum" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Everything built at OP001 Slopathon, ranked by the final vote." />
+    <meta property="og:image" content="https://hackops.tech/assets/home/og.jpg" />
+    <meta property="og:url" content="https://hackops.tech/projects.html" />
+    <meta name="theme-color" content="#1621bb" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Orbitron:wght@900&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/home.css?v=1" />
+  </head>
+  <body>
+    <div class="hp">
+      <div
+        class="hp-museum"
+        style="--op-base: #ffe1f9; --op-ink: #232323; --op-accent: #d0578e; --op-on-accent: #1d1d1b"
+      >
+        <header class="hp-doc-head hp-museum-head">
+          <div class="hp-doc-bar">
+            <a class="hp-plain" aria-label="HACK//OPS home" href="/"><span class="hp-wordmark">HACK//OPS</span></a
+            ><a class="hp-link" href="/#ops">← All ops</a>
+          </div>
+          <div class="hp-wrap hp-doc-title">
+            <p class="hp-kicker">OP001 Slopathon · 23 Jul 2026 · Karlsruhe</p>
+            <h1 class="hp-pixel">The slop museum</h1>
+            <p class="hp-doc-lede">
+              Everything built at the Slopathon, ranked by the final vote. Every exhibit lives in the
+              <a href="https://github.com/HACK-OPS-KA/SLOPATHON" rel="noopener noreferrer">SLOPATHON repo</a>.
+            </p>
+          </div>
+        </header>
+        <main class="hp-wrap hp-museum-main">
+          <ol class="hp-museum-grid">
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/terminal-arcade</span><span class="hp-pixel">01</span></div>
+              <div class="hp-exhibit-shot">
+                <span>no screenshot<br />// damage report pending</span>
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Terminal Arcade</h2>
+                <p>
+                  Claude Code's loading spinner is boring, so we made it play Snake instead · a real, playable game that
+                  gets yanked off-screen the instant the actual answer is ready.
+                </p>
+                <p class="hp-exhibit-cursed"><b>Why it shouldn't exist:</b> wildly over-engineered for the outcome</p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">5 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/terminal-arcade"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/sloppy-keyboard</span><span class="hp-pixel">02</span></div>
+              <div class="hp-exhibit-shot">
+                <span>no screenshot<br />// damage report pending</span>
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Sloppy Keyboard</h2>
+                <p>A keyboard that makes every letter take the scenic route.</p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">3 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/sloppy-keyboard"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/TokLock</span><span class="hp-pixel">03</span></div>
+              <div class="hp-exhibit-shot">
+                <img
+                  src="https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects/TokLock/assets/app-info.png"
+                  alt="TokLock, screenshot"
+                  loading="lazy"
+                />
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>TokLock</h2>
+                <p>
+                  An app that locks you inside TikTok until you've served your daily screen-time sentence. Reverse
+                  screen-time: it doesn't take your phone away · it won't let you put it down.
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> Morally questionable UX (but harmless): it fights you to keep you
+                  doomscrolling.
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">3 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/TokLock"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/calendar-council</span><span class="hp-pixel">04</span></div>
+              <div class="hp-exhibit-shot">
+                <span>no screenshot<br />// damage report pending</span>
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Calendar Council</h2>
+                <p>Your calendar shouldn't be your decision. 12 AI agents. One calendar. Zero personal autonomy.</p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> Adding an event to your calendar should require the unanimous-ish
+                  approval of twelve
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">2 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/calendar-council"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/cursed_minesweeper</span><span class="hp-pixel">05</span></div>
+              <div class="hp-exhibit-shot">
+                <img
+                  src="https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects/cursed_minesweeper/ad-minesweeper/assets/ads/bomb-b-gone.png"
+                  alt="CURSED MINESWEEPER, screenshot"
+                  loading="lazy"
+                />
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>CURSED MINESWEEPER</h2>
+                <p>
+                  Minesweeper, but we made 14 cursed versions of it because one was not enough content for the grind.
+                  Example vibe: "the #1 SLOPATHON minesweeper experience™. no refunds. touch grass afterwards."
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> Minesweeper, but we made 14 cursed versions of it because one was not
+                  enough content for the grind.
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">2 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/cursed_minesweeper"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar">
+                <span>projects/gaslight-gatekeep-grandmaster</span><span class="hp-pixel">06</span>
+              </div>
+              <div class="hp-exhibit-shot">
+                <img
+                  src="https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects/gaslight-gatekeep-grandmaster/image.png"
+                  alt="GASLIGHT · GATEKEEP · GRANDMASTER, screenshot"
+                  loading="lazy"
+                />
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>GASLIGHT · GATEKEEP · GRANDMASTER</h2>
+                <p>
+                  Chess, but the engine hates you personally. Instead of setting the bot's ELO, you set its Roast Level
+                  · and it insults you, gaslights the board, steals your Aura and jumpscares you with the Slopathon
+                  poster.
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> wildly over-engineered for the outcome · full attack/defense map,
+                  material-risk evaluation and legal-move generation, built exclusively to power insults
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">2 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/gaslight-gatekeep-grandmaster"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/screamy-bird</span><span class="hp-pixel">07</span></div>
+              <div class="hp-exhibit-shot">
+                <span>no screenshot<br />// damage report pending</span>
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Screamy Bird</h2>
+                <p>
+                  Flappy Bird, except two people must yell into two separate phones to control their birds on one
+                  needlessly networked laptop screen.
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> It replaces two buttons with two phones, QR pairing, Web Audio
+                  analysis,
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">2 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/screamy-bird"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/slopario</span><span class="hp-pixel">08</span></div>
+              <div class="hp-exhibit-shot">
+                <span>no screenshot<br />// damage report pending</span>
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Slopar.io</h2>
+                <p>
+                  Agario but you only see the game on the big screen (not on your phone!) and you don't know who you
+                  are.
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">1 vote</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/slopario"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/chladni_clock</span><span class="hp-pixel">09</span></div>
+              <div class="hp-exhibit-shot">
+                <span>no screenshot<br />// damage report pending</span>
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Chladni Clock</h2>
+                <p>
+                  Watchface showing the minutes of the hour with the nodes and rings of the eigenmodes of a circular
+                  drum
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> the standart watch of any electronic device is sufficient enough in
+                  telling the time
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">0 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/chladni_clock"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/cursor-distorter</span><span class="hp-pixel">10</span></div>
+              <div class="hp-exhibit-shot">
+                <img
+                  src="https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects/cursor-distorter/docs/screenshots/05-onboarding.png"
+                  alt="Cursor Distorter, screenshot"
+                  loading="lazy"
+                />
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Cursor Distorter</h2>
+                <p>
+                  A precision-engineered SaaS platform whose entire product is making your mouse cursor slightly worse.
+                  Your cursor is technically still working.
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> Solves a problem nobody has · cursors already work fine.
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">0 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/cursor-distorter"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/silence-enforcer</span><span class="hp-pixel">11</span></div>
+              <div class="hp-exhibit-shot">
+                <img
+                  src="https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects/silence-enforcer/assets/preview.png"
+                  alt="Noise Enforcement Officer, screenshot"
+                  loading="lazy"
+                />
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>Noise Enforcement Officer</h2>
+                <p>An absurd automated officer that detects unacceptable silence and files the complaint as noise.</p>
+                <p class="hp-exhibit-cursed"><b>Why it shouldn't exist:</b> solves a problem nobody has</p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">0 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/silence-enforcer"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="hp-exhibit">
+              <div class="hp-exhibit-bar"><span>projects/the-weight-bay</span><span class="hp-pixel">12</span></div>
+              <div class="hp-exhibit-shot">
+                <img
+                  src="https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects/the-weight-bay/assets/screenshot-browse.png"
+                  alt="The Weight Bay ⛵, screenshot"
+                  loading="lazy"
+                />
+              </div>
+              <div class="hp-exhibit-body">
+                <h2>The Weight Bay ⛵</h2>
+                <p>
+                  A Pirate Bay clone where every "illegal download" is a 100% legal, free, open-weights AI model from
+                  Hugging Face.
+                </p>
+                <p class="hp-exhibit-cursed">
+                  <b>Why it shouldn't exist:</b> totally unnecessary: it "tracks" files that a Fortune 500 company hosts
+                  publicly, for free, on a CDN faster than any swarm could ever be
+                </p>
+                <div class="hp-exhibit-foot">
+                  <span class="hp-mono-s">0 votes</span
+                  ><a
+                    class="hp-link"
+                    href="https://github.com/HACK-OPS-KA/SLOPATHON/tree/main/projects/the-weight-bay"
+                    rel="noopener noreferrer"
+                    >View on GitHub ↗</a
+                  >
+                </div>
+              </div>
+            </li>
+          </ol>
+        </main>
+      </div>
+      <footer class="hp-foot">
+        <div class="hp-wrap">
+          <div class="hp-foot-cols">
+            <div class="hp-foot-about">
+              <span class="hp-wordmark">HACK//OPS</span>
+              <p>Everyone builds here.</p>
+            </div>
+            <div>
+              <p class="hp-kicker">Ops</p>
+              <a href="/#next">Next op</a><a href="/#ops">Ops so far</a><a href="/projects.html">Projects</a>
+            </div>
+            <div>
+              <p class="hp-kicker">Companies</p>
+              <a href="/#companies">Formats</a
+              ><a href="mailto:team@hackops.tech?subject=HACK%2F%2FOPS">team@hackops.tech</a
+              ><a href="/photos.html">Photo notice</a>
+            </div>
+            <div>
+              <p class="hp-kicker">Follow</p>
+              <a href="https://luma.com/hackops" rel="noopener noreferrer">Luma ↗</a
+              ><a href="https://www.instagram.com/hackops.tech" rel="noopener noreferrer">Instagram ↗</a
+              ><a href="https://www.linkedin.com/company/hack-ops/" rel="noopener noreferrer">LinkedIn ↗</a
+              ><a href="https://github.com/HACK-OPS-KA" rel="noopener noreferrer">GitHub ↗</a>
+            </div>
+          </div>
+          <div class="hp-foot-row hp-mono-s">
+            <span>© 2026 HACK//OPS</span
+            ><span class="hp-credits"
+              >Sky:
+              <a href="https://unsplash.com/photos/zlGobrmAuyE" rel="noopener noreferrer">engin akyurt / Unsplash</a> ·
+              Reflections:
+              <a href="https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky" rel="noopener noreferrer"
+                >Poly Haven</a
+              ></span
+            ><a href="https://luma.com/hackops" rel="noopener noreferrer"
+              >Subscribe to the Luma calendar to stay updated ↗</a
+            >
+          </div>
+        </div>
+        <div class="hp-giant" aria-hidden="true"><span class="hp-wordmark">HACK//OPS</span></div>
+      </footer>
+    </div>
+  </body>
 </html>

@@ -1,398 +1,784 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-<title>hack//ops</title>
-<meta name="description" content="hack//ops runs experimental hackathons in karlsruhe. karlsruhe builds here." />
-<meta property="og:title" content="hack//ops" />
-<meta property="og:type" content="website" />
-<meta property="og:description" content="karlsruhe builds here. experimental hackathons by students, printed on one endless desktop." />
-<meta property="og:image" content="https://hackops.tech/assets/op000-hero.jpg" />
-<meta property="og:url" content="https://hackops.tech" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Press+Start+2P&family=Hanken+Grotesk:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet" />
-<!-- a real crawlable PNG favicon: Google Search ignores data: URI
-     icons, it needs a fetchable file, at least 48x48, multiple of 48 -->
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="preload" href="assets/good-times.otf" as="font" type="font/otf" crossorigin />
-<link rel="stylesheet" href="site.css?v=desktop-9" />
-<script>
-  /* apply the saved theme before first paint so there is no flash */
-  (function () {
-    try {
-      var t = localStorage.getItem('hackops-theme');
-      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>HACK//OPS · Everyone builds here.</title>
+    <meta
+      name="description"
+      content="Hackathons in Karlsruhe, Stuttgart and München. Subscribe to the Luma calendar to stay updated."
+    />
+    <meta property="og:title" content="HACK//OPS · Everyone builds here." />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Hackathons in Karlsruhe, Stuttgart and München. Subscribe to the Luma calendar to stay updated."
+    />
+    <meta property="og:image" content="https://hackops.tech/assets/home/og.jpg" />
+    <meta property="og:url" content="https://hackops.tech/" />
+    <meta name="theme-color" content="#1621bb" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Orbitron:wght@900&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/home.css?v=1" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "/assets/vendor/three/three.module.min.js",
+          "three/addons/": "/assets/vendor/three/addons/"
+        }
       }
-    } catch (e) {}
-  })();
-</script>
-</head>
-<body>
-
-<noscript>
-  <div class="ns">
-    <p><strong>hack//ops</strong> · karlsruhe builds here.</p>
-    <p>This site is one big zoomable desktop and needs JavaScript to fly.
-       The short version: we are a Karlsruhe student group running experimental
-       hackathons. Our first operation was op//001 slopathon in July 2026,
-       and its archive is at
-       <a href="/projects.html">the slop museum</a>.</p>
-  </div>
-</noscript>
-
-<!-- the taskbar comes before the world in the DOM on purpose: tab order
-     follows document order, and starting inside the world meant a
-     keyboard user walked every card and link before ever reaching the
-     navigation. It is fixed and z-indexed, so it still paints on top. -->
-<header>
-  <button class="wordmark" type="button" data-interactive
-          onclick="hackops.flyTo('home')">hack<b>//</b>ops</button>
-  <nav id="stops-nav" aria-label="Stops" data-interactive></nav>
-  <button id="modebtn" class="mode-toggle" type="button" data-interactive
-          aria-label="Toggle dark mode"><span class="dot" aria-hidden="true"></span><span id="modelbl">dark mode</span></button>
-</header>
-
-<main id="stage">
-  <canvas id="grid" aria-hidden="true"></canvas>
-
-  <!-- ==============================================================
-       THE WORLD: an endless pastel desktop. Anything with data-x /
-       data-y is a placed container, anchored by its center.
-       data-x / data-y   world coordinates of the center
-       data-rot          rotation about the center, degrees
-       data-scale        world scale of the element (default 1)
-       data-stop="id"    makes it a camera keyframe; tour = document order
-       data-vw / data-vh the world rect the camera frames at landing
-       data-bearing      camera roll at landing, degrees
-       Any of these with an -m suffix (data-x-m, data-cy-m, data-vw-m,
-       data-bearing-m) replaces the base value at 640px and below.
-       THE TOUR: home, then a 50x microscope dive into the microprint,
-       pull out and pan to the manifesto, the ops cluster, past ops,
-       crew, then the full desktop.
-       PHONES: the world is not scattered, it is two columns. The home
-       column sits at x 6000, everything op-related at x 7480, and each
-       stop is framed at roughly 1:1 so a world pixel reads as a screen
-       pixel. That is why the mobile card widths in site.css look like
-       ordinary phone layout numbers.
-       ============================================================== -->
-  <div id="world">
-
-    <!-- 01 HOME: ink printed straight on the desktop.
-         data-cx-m etc. retarget only the CAMERA on phones: a portrait
-         frame over the (CSS-shrunk) hero column and the signup card
-         that data-x-m parks right beneath it -->
-    <section class="stop-home" data-stop="home" data-label="hack//ops"
-             data-x="6000" data-y="5400" data-vw="1600" data-vh="1300" data-bearing="0"
-             data-cx="6000" data-cy="5508"
-             data-cx-m="6000" data-cy-m="5530" data-vw-m="340" data-vh-m="730">
-      <p class="home-tag">karlsruhe builds here.</p>
-      <h1 class="home-title">hack<b>//</b>ops</h1>
-      <p class="home-blurb">
-        <b>hack//ops</b> runs experimental hackathons in karlsruhe<br />
-        <b>hack//ops</b> turns students into builders and builders into a scene<br />
-        <b>hack//ops</b> is the fast lane of the karlsruhe tech ecosystem
-      </p>
-      <div class="runs-list">
-        <span>hack//ops runs <b style="color:var(--pink-txt)">slopathons</b></span>
-        <span>hack//ops runs <b style="color:var(--silver-txt)">hardware jams</b></span>
-        <span>hack//ops runs <b style="color:var(--purple-txt)">agent gauntlets</b></span>
-        <span>hack//ops runs <b style="color:var(--red-txt)">build fridays</b></span>
-        <span>hack//ops runs <b style="color:var(--gold-txt)">benchmarks</b></span>
-        <span>hack//ops runs <b style="color:var(--sky-txt)">co-working</b></span>
-        <span>hack//ops runs <b style="color:var(--pink-txt)">prototypes</b></span>
-        <span>hack//ops runs <b style="color:var(--purple-txt)">experiments</b></span>
-        <span>hack//ops runs <b style="color:var(--gold-txt)">karlsruhe</b></span>
-      </div>
-      <p class="home-foot">scroll to fly · 49.0069 N · 8.4037 E</p>
-    </section>
-
-    <!-- MICROPRINT: a whole page at 2% scale, hidden under the litany.
-         data-hidden keeps it out of the nav, the tab order and the tour;
-         the only ways in are free-zooming onto it, typing the magic word,
-         or worrying the pyramid (see engine.js). On mobile the stacked
-         home cluster (title/signup/pyramid) now sits right on top of
-         its desktop coordinates, so both the element and the camera
-         target move well clear of it, below the pyramid card. -->
-    <section class="microprint" data-stop="op000" data-label="op//000" data-hidden="1"
-             data-x="6001" data-y="6062" data-scale="0.02"
-             data-vw="13" data-vh="10" data-bearing="0"
-             data-x-m="6001" data-y-m="6800" data-cx-m="6001" data-cy-m="6800">
-      <h3>op<b>//</b>000 · the microprint</h3>
-      <p>You just zoomed in fifty times. This is the smallest print on the
-         desktop, and only the curious ever land on it.</p>
-      <p>Tell an operator the word <strong>microprint</strong> at the next
-         event. They will know what it means.</p>
-      <p class="mono">karlsruhe builds here.</p>
-    </section>
-
-    <!-- 03 MANIFESTO -->
-    <section class="win manifesto-win" style="--tbar: var(--purple)"
-             data-stop="manifesto" data-label="manifesto"
-             data-x="4150" data-y="6750" data-rot="-11" data-bearing="-11"
-             data-vw="980" data-vh="760"
-             data-x-m="4150" data-y-m="6750" data-rot-m="0"
-             data-cx-m="4150" data-cy-m="6750" data-vw-m="340" data-vh-m="730"
-             data-bearing-m="0">
-      <div class="win-title"><span class="t">manifesto.txt</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <h2>community first. mainstream last.</h2>
-        <p><strong>hack//ops is a student group in karlsruhe</strong> that runs
-           the hackathon formats that do not fit anywhere else. No corporate
-           pitch decks, no quid pro quo. We build because building together
-           is the point.</p>
-        <p>We are the accelerated r&amp;d lab of the karlsruhe tech ecosystem:
-           a crew of techies who are not scared of risk, breaking away from
-           the mainstream event format one operation at a time.</p>
-        <div class="rules">
-          <div style="--rc: var(--pink-txt)"><span class="n">rule_01</span><span class="r">ship it, then talk about it.</span></div>
-          <div style="--rc: var(--purple-txt)"><span class="n">rule_02</span><span class="r">community is the moat.</span></div>
-          <div style="--rc: var(--sky-txt)"><span class="n">rule_03</span><span class="r">experimental formats over safe formats.</span></div>
-          <div style="--rc: var(--gold-txt)"><span class="n">rule_04</span><span class="r">just let them eat pcbs.</span></div>
+    </script>
+  </head>
+  <body>
+    <div class="hp">
+      <!-- ═══ 01 HERO: title, "Next event" button (points at the next op on Luma), partner logos ═══ -->
+      <header class="hp-hero">
+        <div class="hp-hero-top">
+          <div class="hp-brand">
+            <a class="hp-plain" aria-label="HACK//OPS home" href="/"><span class="hp-wordmark">HACK//OPS</span></a>
+            <nav class="hp-nav" aria-label="Sections">
+              <a href="#ops">Ops</a><a href="/projects.html">Projects</a><a href="#companies">For companies</a
+              ><a href="https://luma.com/hackops" rel="noopener noreferrer">Luma<sup>↗</sup></a>
+            </nav>
+          </div>
+          <a class="hp-btn hp-btn-light hp-glow" href="https://luma.com/01bjklbs" rel="noopener noreferrer"
+            >Next event</a
+          >
         </div>
-      </div>
-    </section>
-
-    <!-- 04 OPERATIONS: the next op plus everything still in planning.
-         The card with a date line and a call to action is always the one
-         actually happening; the rest carry a plain grey status. On phones the
-         whole cluster restacks into one column via data-x-m/data-y-m,
-         so the stop is walked by panning down instead of sideways. -->
-    <div class="ops-head deco" data-x="8060" data-y="6060" data-rot="-2"
-         data-x-m="7480" data-y-m="6393" data-rot-m="0">the <b>op</b> series</div>
-
-    <section class="win op-win" style="--tbar: var(--purple)"
-             data-x="7560" data-y="6560" data-rot="-4"
-             data-x-m="7480" data-y-m="6542" data-rot-m="0">
-      <div class="win-title"><span class="t">op003_agent_gauntlet.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <h3>agent gauntlet</h3>
-        <p>Your agents versus everyone else's. Vibes do not ship.
-           Benchmarks do.</p>
-        <span class="status">in planning</span>
-      </div>
-    </section>
-
-    <section class="win op-win" style="--tbar: var(--red)"
-             data-x="8540" data-y="6620" data-rot="5"
-             data-x-m="7480" data-y-m="6779" data-rot-m="0">
-      <div class="win-title"><span class="t">op004_build_friday.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <h3>build friday</h3>
-        <p>"I compile, therefore I am." Recurring co-working and
-           show-and-tell nights. Bring a project, leave with three.</p>
-        <span class="status">in planning</span>
-      </div>
-    </section>
-
-    <!-- the ops camera stop frames the whole cluster on desktop, and just
-         the first card on phones (the rest of the column is one pan
-         away, which beats four unreadable cards at once) -->
-    <div class="stop-field" data-stop="ops" data-label="operations"
-         data-x="8050" data-y="6360" data-vw="1900" data-vh="1100" data-bearing="4"
-         data-cx-m="7480" data-cy-m="6597" data-vw-m="340" data-vh-m="730"
-         data-bearing-m="0"></div>
-
-    <!-- 05 PAST OPS: operations that already shipped. Everything an
-         attendee or a sponsor might want to look up afterwards lives
-         here: dates, size, the final vote and the archive links. When a
-         new op finishes, move its card down here and give it a status
-         of "archived" plus its standings. -->
-    <div class="ops-head deco" data-x="7700" data-y="8480" data-rot="-1"
-         data-x-m="7480" data-y-m="7169" data-rot-m="0">past <b>ops</b></div>
-
-    <section class="win op-win" style="--tbar: var(--pink)"
-             data-x="7500" data-y="9080" data-rot="-3"
-             data-x-m="7480" data-y-m="7626" data-rot-m="0">
-      <div class="win-title"><span class="t">op001_slopathon.exe</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <img src="assets/op001-slopathon.jpg" alt="op001 slopathon poster: pink desktop windows with a wireframe pyramid" />
-      <div class="win-body">
-        <h3>slopathon</h3>
-        <p class="mono">july 2026 · karlsruhe · our opening operation</p>
-        <p>Whoever slops the most, wins. Build the most gloriously cursed,
-           over-engineered, useless-but-working prototype you can. No pitch
-           decks, no recruiter booths.</p>
-        <p>12 teams shipped 12 working prototypes in one room and the room
-           voted on the last night. Every exhibit is still online.</p>
-        <span class="status">archived</span>
-        <a class="luma-btn" data-interactive href="/projects.html">browse the slop museum<span class="sub">12 exhibits · every project</span></a>
-        <a class="luma-btn ghost" data-interactive href="https://github.com/HACK-OPS-KA/SLOPATHON"
-           target="_blank" rel="noopener">view on github<span class="sub">hack-ops-ka / slopathon</span></a>
-      </div>
-    </section>
-
-    <section class="win op-win standings-win" style="--tbar: var(--gold)"
-             data-x="8560" data-y="9040" data-rot="4"
-             data-x-m="7480" data-y-m="8318" data-rot-m="0">
-      <div class="win-title"><span class="t">final_standings.txt</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <h3>the vote</h3>
-        <p>20 votes counted in the room on the last night, one per device.
-           Ties are real ties. Nobody was eliminated for shipping zero.</p>
-        <div class="standings">
-          <div class="first"><span class="pl">01</span><span class="nm">terminal arcade</span><span class="ct">5</span></div>
-          <div><span class="pl">02</span><span class="nm">sloppy keyboard</span><span class="ct">3</span></div>
-          <div><span class="pl">02</span><span class="nm">toklock</span><span class="ct">3</span></div>
-          <div><span class="pl">04</span><span class="nm">calendar council</span><span class="ct">2</span></div>
-          <div><span class="pl">04</span><span class="nm">cursed minesweeper</span><span class="ct">2</span></div>
-          <div><span class="pl">04</span><span class="nm">gaslight gatekeep grandmaster</span><span class="ct">2</span></div>
-          <div><span class="pl">04</span><span class="nm">screamy bird</span><span class="ct">2</span></div>
-          <div><span class="pl">08</span><span class="nm">slopar.io</span><span class="ct">1</span></div>
-          <div><span class="pl">09</span><span class="nm">chladni clock</span><span class="ct">0</span></div>
-          <div><span class="pl">09</span><span class="nm">cursor distorter</span><span class="ct">0</span></div>
-          <div><span class="pl">09</span><span class="nm">noise enforcement officer</span><span class="ct">0</span></div>
-          <div><span class="pl">09</span><span class="nm">the weight bay</span><span class="ct">0</span></div>
+        <div class="hp-hero-3d" aria-hidden="true">
+          <div class="hp-sky">
+            <picture
+              ><source media="(max-width: 760px)" srcset="/assets/home/sky/sky-portrait.jpg" />
+              <img src="/assets/home/sky/sky-landscape.jpg" alt=""
+            /></picture>
+          </div>
+          <picture class="hp-hero-still"
+            ><source media="(max-width: 760px)" srcset="/assets/home/3d/pyramid-portrait.webp" />
+            <img src="/assets/home/3d/pyramid-landscape.webp" alt=""
+          /></picture>
         </div>
-      </div>
-    </section>
-
-    <!-- the past ops camera stop: the whole cluster on desktop, the
-         slopathon card alone on phones -->
-    <div class="stop-field" data-stop="past" data-label="past ops"
-         data-x="8030" data-y="9020" data-vw="1900" data-vh="1450" data-bearing="-2"
-         data-cx-m="7480" data-cy-m="7598" data-vw-m="340" data-vh-m="730"
-         data-bearing-m="0"></div>
-
-    <!-- 06 CREW -->
-    <section class="win crew-win" style="--tbar: var(--sky)"
-             data-stop="crew" data-label="crew"
-             data-x="5250" data-y="4250" data-rot="5" data-bearing="5"
-             data-cx="5250" data-cy="4440" data-vw="760" data-vh="1060"
-             data-x-m="5250" data-y-m="4250" data-rot-m="0"
-             data-cx-m="5250" data-cy-m="4250" data-vw-m="340" data-vh-m="730"
-             data-bearing-m="0">
-      <div class="win-title"><span class="t">crew // operators</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <h2>operators.</h2>
-        <p>A growing crew of karlsruhe students, backed by the local
-           ecosystem. Partners and sponsors are announced with each
-           operation.</p>
-        <div class="crew-rows">
-          <div><span class="nm">marko nedilko</span><span class="rl" style="--cc: var(--pink-txt)">founder · ops</span></div>
-          <div><span class="nm">sebastian kallfelz</span><span class="rl">core team</span></div>
-          <div><span class="nm">pascal schneider</span><span class="rl">core team</span></div>
-          <div><span class="nm">milan ferus-comelo</span><span class="rl">core team</span></div>
+        <h1 class="hp-hero-title hp-pixel"><span>Here</span><span>Builds</span><span>Everyone</span></h1>
+        <div class="hp-strip">
+          <span class="hp-strip-label">Backed by</span>
+          <div
+            class="hp-marquee"
+            aria-label="Partners: Arduino, Chroma Awards, Edge Impulse, Elecrow, ElevenLabs, Meshy, Rosebud, Seeed Studio"
+          >
+            <div class="hp-marquee-track" aria-hidden="true">
+              <span class="hp-marquee-set"
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/arduino.svg" alt="" style="height: 36px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/chroma-awards.svg" alt="" style="height: 21px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/edge-impulse.svg" alt="" style="height: 21px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/elecrow.png" alt="" style="height: 25px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/elevenlabs.svg" alt="" style="height: 17px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/meshy.svg" alt="" style="height: 30px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/rosebud.png" alt="" style="height: 25px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/seeed-studio.svg" alt="" style="height: 21px" /></span></span
+              ><span class="hp-marquee-set"
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/arduino.svg" alt="" style="height: 36px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/chroma-awards.svg" alt="" style="height: 21px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/edge-impulse.svg" alt="" style="height: 21px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/elecrow.png" alt="" style="height: 25px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/elevenlabs.svg" alt="" style="height: 17px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/meshy.svg" alt="" style="height: 30px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/rosebud.png" alt="" style="height: 25px" /></span
+                ><span class="hp-logo-slot"
+                  ><img src="/assets/home/partners/seeed-studio.svg" alt="" style="height: 21px" /></span
+              ></span>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <!-- socials: one card, so there is exactly one place to update when
-         a channel is added. rel="me" ties the profiles back to the
-         domain. Keep this list identical to the one in the projects
-         page footer. -->
-    <section class="win socials-win" style="--tbar: var(--purple)"
-             data-x="5250" data-y="4760" data-rot="-4"
-             data-x-m="5250" data-y-m="4700" data-rot-m="0">
-      <div class="win-title"><span class="t">follow.url</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <h3>find us.</h3>
-        <div class="socials">
-          <a data-interactive href="https://www.linkedin.com/company/hack-ops/"
-             target="_blank" rel="me noopener"><span class="w">linkedin</span><span class="h">/company/hack-ops</span></a>
-          <a data-interactive href="https://www.instagram.com/hackops.tech"
-             target="_blank" rel="me noopener"><span class="w">instagram</span><span class="h">@hackops.tech</span></a>
-          <a data-interactive href="https://github.com/HACK-OPS-KA"
-             target="_blank" rel="me noopener"><span class="w">github</span><span class="h">hack-ops-ka</span></a>
-          <a data-interactive href="https://luma.com/user/hackops"
-             target="_blank" rel="me noopener"><span class="w">lu.ma</span><span class="h">every operation</span></a>
-          <a data-interactive href="/photos.html"><span class="w">photo notice</span><span class="h">what we shoot, how to opt out</span></a>
+      </header>
+      <!-- ═══ 02 NEXT OP: the upcoming op in its own colours, key visual, how an op runs ═══ -->
+      <section
+        id="next"
+        class="hp-panel hp-op-look"
+        style="--op-base: #0e0e0e; --op-ink: #f6f5ee; --op-accent: #fff066; --op-on-accent: #1d1d1b"
+      >
+        <div class="hp-wrap">
+          <p class="hp-kicker hp-center">Next op · OP005</p>
+          <h2 class="hp-h2 hp-center">The next op is <em>KA:Ignite</em>.</h2>
+          <p class="hp-sub hp-center">A hardware hackathon at KIT Nova, Karlsruhe. 4–6 Dec 2026.</p>
+          <div class="hp-next">
+            <a class="hp-keyvisual hp-plain" href="https://luma.com/01bjklbs" rel="noopener noreferrer"
+              ><img
+                src="/assets/home/looks/ka-ignite.png"
+                alt="KA:IGNITE, a pixel sun on black. 04.–06.12.2026, KIT Nova, Karlsruhe."
+            /></a>
+            <div class="hp-steps">
+              <p class="hp-kicker">How an op runs</p>
+              <div>
+                <details class="hp-step" open="" data-state="open">
+                  <summary>
+                    <span class="hp-step-n">01</span><span class="hp-step-t">Sign up on Luma</span
+                    ><span class="hp-plus" aria-hidden="true"></span>
+                  </summary>
+                  <div class="hp-acc-body">
+                    <p>Every op has its own Luma page. Sign-up, updates and the address are there.</p>
+                  </div>
+                </details>
+                <details class="hp-step" data-state="closed">
+                  <summary>
+                    <span class="hp-step-n">02</span><span class="hp-step-t">Come alone or with friends</span
+                    ><span class="hp-plus" aria-hidden="true"></span>
+                  </summary>
+                  <div class="hp-acc-body">
+                    <p>Teams form at the op, on our platform. Nobody has to arrive with one.</p>
+                  </div>
+                </details>
+                <details class="hp-step" data-state="closed">
+                  <summary>
+                    <span class="hp-step-n">03</span><span class="hp-step-t">Build</span
+                    ><span class="hp-plus" aria-hidden="true"></span>
+                  </summary>
+                  <div class="hp-acc-body"><p>Pick a track or a bounty, or build the thing you came for.</p></div>
+                </details>
+                <details class="hp-step" data-state="closed">
+                  <summary>
+                    <span class="hp-step-n">04</span><span class="hp-step-t">Show it live</span
+                    ><span class="hp-plus" aria-hidden="true"></span>
+                  </summary>
+                  <div class="hp-acc-body"><p>Teams demo on stage: a few minutes each, no slides.</p></div>
+                </details>
+                <details class="hp-step" data-state="closed">
+                  <summary>
+                    <span class="hp-step-n">05</span><span class="hp-step-t">Keep it online</span
+                    ><span class="hp-plus" aria-hidden="true"></span>
+                  </summary>
+                  <div class="hp-acc-body"><p>If your team agrees, the project goes into the showcase.</p></div>
+                </details>
+              </div>
+              <a class="hp-btn hp-btn-blue" href="https://luma.com/01bjklbs" rel="noopener noreferrer"
+                >Sign up for OP005</a
+              >
+            </div>
+          </div>
         </div>
-        <p class="mono">team@hackops.tech</p>
-      </div>
-    </section>
-
-    <!-- 07 EXPLORE: the whole desktop. The frame has to grow whenever the
-         world does, or the newest cluster sits outside the "everything"
-         shot. On phones the world is two tall columns instead of a wide
-         field, so the mobile frame is portrait and much taller. -->
-    <div class="stop-field" data-stop="field" data-label="explore"
-         data-x="6600" data-y="6550" data-vw="6800" data-vh="6200" data-bearing="0"
-         data-cx-m="6400" data-cy-m="7000" data-vw-m="5200" data-vh-m="6800"></div>
-
-    <!-- ================= desktop decoration ================= -->
-
-    <!-- the watermark is 2800 world units wide and paints over anything
-         it crosses, so on phones it moves off the op column and parks
-         under the home column instead -->
-    <div class="silkprint deco" aria-hidden="true" data-x="6300" data-y="7900" data-rot="0"
-         data-x-m="5800" data-y-m="7500">karlsruhe builds here.</div>
-
-    <section class="win wallpaper-win deco" style="--tbar: var(--sky)"
-             data-x="4620" data-y="5150" data-rot="-8">
-      <div class="win-title"><span class="t">wallpaper.jpg - viewer</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <img src="assets/op000-hero-crop.jpg" alt="chrome pyramid station floating in a blue sky" />
-      <div class="cap">op000_render.png · 3d, not ai · blender</div>
-    </section>
-
-    <!-- printed into the home view, right under the signup dialog;
-         on phones it drops into its own compact card below the card
-         instead of sitting beside the title -->
-    <section class="win pyr-win" style="--tbar: var(--purple)" data-interactive
-             data-x="6520" data-y="5640" data-rot="-3"
-             data-x-m="6000" data-y-m="5770" data-rot-m="0">
-      <div class="win-title"><span class="t">pyramid1.fbx</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <pre id="ascii-pyr" aria-hidden="true"></pre>
-      </div>
-    </section>
-
-    <section class="win load-win deco" aria-hidden="true" style="--tbar: var(--gold)"
-             data-x="6900" data-y="7480" data-rot="-3">
-      <div class="win-title"><span class="t">copying karlsruhe.zip</span><span class="b" aria-hidden="true">_</span><span class="b" aria-hidden="true">&#9633;</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <p class="lbl">building community... 68%</p>
-        <div class="load-bar">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-          <i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i>
+      </section>
+      <!-- ═══ 03 TWO WAYS IN: builders and companies ═══ -->
+      <section class="hp-panel hp-blue">
+        <div class="hp-wrap">
+          <h2 class="hp-kicker">Two ways in</h2>
+          <div class="hp-fork">
+            <article class="hp-fork-side hp-fork-build">
+              <p class="hp-fork-tag">01 · For builders</p>
+              <h3 class="hp-fork-title">Build at an op.</h3>
+              <ol class="hp-fork-list">
+                <li class="hp-fork-row">
+                  <span class="hp-fork-num">1</span
+                  ><span class="hp-fork-body"
+                    ><span class="hp-fork-name">No team needed</span
+                    ><span class="hp-fork-line">Teams form at the op, on our platform.</span></span
+                  >
+                </li>
+                <li class="hp-fork-row">
+                  <span class="hp-fork-num">2</span
+                  ><span class="hp-fork-body"
+                    ><span class="hp-fork-name">Tracks and bounties</span
+                    ><span class="hp-fork-line">Or build the thing you came for.</span></span
+                  >
+                </li>
+                <li class="hp-fork-row">
+                  <span class="hp-fork-num">3</span
+                  ><span class="hp-fork-body"
+                    ><span class="hp-fork-name">Live demos</span
+                    ><span class="hp-fork-line">2–3 minutes on stage, no slides.</span></span
+                  >
+                </li>
+                <li class="hp-fork-row">
+                  <span class="hp-fork-num">4</span
+                  ><span class="hp-fork-body"
+                    ><span class="hp-fork-name">It stays yours</span
+                    ><span class="hp-fork-line"
+                      >IP stays with your team. The project goes in the showcase if you agree.</span
+                    ></span
+                  >
+                </li>
+              </ol>
+              <div class="hp-fork-act">
+                <a class="hp-btn hp-btn-blue" href="#next">See the next op</a
+                ><a class="hp-link" href="https://luma.com/hackops" rel="noopener noreferrer">Follow on Luma ↗</a>
+              </div>
+            </article>
+            <span class="hp-fork-or" aria-hidden="true">or</span>
+            <article class="hp-fork-side hp-fork-host">
+              <p class="hp-fork-tag">02 · For companies</p>
+              <h3 class="hp-fork-title">Bring a challenge.</h3>
+              <ul class="hp-fork-list">
+                <li>
+                  <a class="hp-fork-row hp-fork-link" href="#companies"
+                    ><span class="hp-fork-num">1</span
+                    ><span class="hp-fork-body"
+                      ><span class="hp-fork-name">Hack Sprint<em>Easiest start</em></span
+                      ><span class="hp-fork-line"
+                        >One evening, one challenge from you, demos the same night.</span
+                      ></span
+                    ><span class="hp-fork-len">3–4 hours</span
+                    ><span class="hp-fork-arrow" aria-hidden="true">→</span></a
+                  >
+                </li>
+                <li>
+                  <a class="hp-fork-row hp-fork-link" href="#companies"
+                    ><span class="hp-fork-num">2</span
+                    ><span class="hp-fork-body"
+                      ><span class="hp-fork-name">Challenge</span
+                      ><span class="hp-fork-line"
+                        >Your challenge or track inside a HACK//OPS hackathon. You mentor and judge it.</span
+                      ></span
+                    ><span class="hp-fork-len">Inside an op</span
+                    ><span class="hp-fork-arrow" aria-hidden="true">→</span></a
+                  >
+                </li>
+                <li>
+                  <a class="hp-fork-row hp-fork-link" href="#companies"
+                    ><span class="hp-fork-num">3</span
+                    ><span class="hp-fork-body"
+                      ><span class="hp-fork-name">Hackathon</span
+                      ><span class="hp-fork-line"
+                        >A whole op hosted with you. Your theme, tech and venue, or ours.</span
+                      ></span
+                    ><span class="hp-fork-len">1 day or a weekend</span
+                    ><span class="hp-fork-arrow" aria-hidden="true">→</span></a
+                  >
+                </li>
+              </ul>
+              <div class="hp-fork-act">
+                <a
+                  class="hp-btn hp-btn-light"
+                  href="mailto:team@hackops.tech?subject=HACK%2F%2FOPS%3A%20bringing%20a%20challenge"
+                  >Write to us</a
+                ><a class="hp-link" href="#companies">See the formats ↓</a>
+              </div>
+            </article>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <section class="win err-win deco" aria-hidden="true" style="--tbar: var(--red)"
-             data-x="8720" data-y="5250" data-rot="10">
-      <div class="win-title"><span class="t">error</span><span class="b" aria-hidden="true">&times;</span></div>
-      <div class="win-body">
-        <span class="err-glyph">!</span>
-        <p>not_a_bug.exe: it's a feature. <br /><strong>[ ok ]</strong></p>
-      </div>
-    </section>
-
-    <div class="dicon deco" aria-hidden="true" data-x="4280" data-y="4180" data-rot="0" style="--dc: var(--gold)">
-      <span class="px folder"></span><span class="lbl">my_hackathon</span>
+      </section>
+      <!-- ═══ 04 OPS SO FAR: one tile per past op; the game jam band with its winners ═══ -->
+      <section id="ops" class="hp-panel hp-light">
+        <div class="hp-wrap">
+          <p class="hp-kicker hp-center">Ops so far</p>
+          <h2 class="hp-h2 hp-center">Every op, its <em>own world</em>.</h2>
+        </div>
+        <ol class="hp-quilt">
+          <li class="hp-w hp-w-band hp-w-jam" style="--jam-a: #ff6b4a; --jam-b: #179970">
+            <div class="hp-jam-label">
+              <header class="hp-w-head">
+                <span class="hp-w-tag hp-pixel">OP0K4 · OP0M4</span><span class="hp-w-meta">14 Nov 2026</span>
+              </header>
+              <h3 class="hp-w-name hp-pixel">Game Jam</h3>
+              <p class="hp-jam-spec">Karlsruhe + München<br />2 cities · 1 day · 23 teams · 26 games</p>
+              <a class="hp-w-cta" href="https://itch.io/jam/hackops-game-jam" rel="noopener noreferrer"
+                >All 26 games on itch.io ↗</a
+              >
+            </div>
+            <div class="hp-reel-wrap">
+              <ul class="hp-reel" aria-label="Game jam winners">
+                <li class="hp-win" style="--city: var(--jam-a)">
+                  <a href="https://kende-daniel-rethelyi.itch.io/misaligned" rel="noopener noreferrer" class="hp-win-in"
+                    ><span class="hp-win-badge hp-pixel">#1 Karlsruhe</span
+                    ><img src="/assets/home/jam/misaligned.png" alt="" width="315" height="250" loading="lazy" /><span
+                      class="hp-win-note"
+                      >Fast-tracked to the Chroma Awards semi-finals</span
+                    ><span class="hp-win-title">Misaligned</span
+                    ><span class="hp-win-blurb"
+                      >Puzzles you solve by ear, in a world that's just a little off. Stanley Parable vibes, headphones
+                      on.</span
+                    ><span class="hp-win-play">Play on itch.io ↗</span></a
+                  >
+                </li>
+                <li class="hp-win" style="--city: var(--jam-b)">
+                  <a href="https://odin94.itch.io/abyssfall" rel="noopener noreferrer" class="hp-win-in"
+                    ><span class="hp-win-badge hp-pixel">#1 München</span
+                    ><img src="/assets/home/jam/abyssfall.png" alt="" width="315" height="250" loading="lazy" /><span
+                      class="hp-win-note"
+                      >Fast-tracked to the Chroma Awards semi-finals</span
+                    ><span class="hp-win-title">Abyssfall</span
+                    ><span class="hp-win-blurb"
+                      >Dive to the bottom of the Mariana trench to meet the mysterious creature that called you down
+                      there.</span
+                    ><span class="hp-win-play">Play on itch.io ↗</span></a
+                  >
+                </li>
+                <li class="hp-win" style="--city: var(--jam-a)">
+                  <a href="https://anxiousgorilla01.itch.io/tether" rel="noopener noreferrer" class="hp-win-in"
+                    ><span class="hp-win-badge hp-pixel">Best use of ElevenLabs · Karlsruhe</span
+                    ><img src="/assets/home/jam/tether.png" alt="" width="315" height="250" loading="lazy" /><span
+                      class="hp-win-title"
+                      >TETHER</span
+                    ><span class="hp-win-blurb"
+                      >Your only weapon is a robot that thinks it's bringing someone home.</span
+                    ><span class="hp-win-play">Play on itch.io ↗</span></a
+                  >
+                </li>
+                <li class="hp-win" style="--city: var(--jam-b)">
+                  <a href="https://sventian.itch.io/goliath" rel="noopener noreferrer" class="hp-win-in"
+                    ><span class="hp-win-badge hp-pixel">Best use of ElevenLabs · München</span
+                    ><img src="/assets/home/jam/goliath.png" alt="" width="315" height="250" loading="lazy" /><span
+                      class="hp-win-title"
+                      >Goliath</span
+                    ><span class="hp-win-blurb"
+                      >You're David and your hand is the slingshot: the webcam tracks it with computer vision. Tiny
+                      puzzles, one very big giant.</span
+                    ><span class="hp-win-play">Play on itch.io ↗</span></a
+                  >
+                </li>
+                <li class="hp-win hp-win-all">
+                  <a href="https://itch.io/jam/hackops-game-jam" rel="noopener noreferrer" class="hp-win-in"
+                    ><span class="hp-pixel">All 26 games →</span></a
+                  >
+                </li>
+              </ul>
+              <div class="hp-reel-btns">
+                <button type="button" aria-label="Previous">←</button><button type="button" aria-label="Next">→</button>
+              </div>
+            </div>
+          </li>
+          <li
+            class="hp-w hp-w-tall hp-w-tex-grid"
+            style="--op-base: #0b0b0c; --op-ink: #f7f7fa; --op-accent: #e8c877; --op-on-accent: #1d1d1b"
+          >
+            <header class="hp-w-head">
+              <span class="hp-w-tag hp-pixel">OP003</span><span class="hp-w-meta">10 Oct 2026 · Karlsruhe</span>
+            </header>
+            <figure class="hp-w-kv">
+              <img
+                src="/assets/home/worlds/bare-metal.jpg"
+                alt="HACK//OPS Bare Metal, Hardware Hackathon: a metal pyramid with a gold edge."
+              />
+            </figure>
+            <div class="hp-w-art">
+              <svg viewBox="0 0 600 350" class="hp-hw" aria-hidden="true">
+                <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+                  <path d="M30 40 H244 L250 46 V204 L244 210 H30 Z"></path>
+                  <rect x="18" y="58" width="52" height="40"></rect>
+                  <rect x="24" y="64" width="34" height="28"></rect>
+                  <rect x="22" y="150" width="46" height="34"></rect>
+                  <circle cx="45" cy="167" r="9"></circle>
+                  <circle cx="74" cy="50" r="4"></circle>
+                  <circle cx="78" cy="200" r="4"></circle>
+                  <circle cx="236" cy="62" r="4"></circle>
+                  <circle cx="236" cy="150" r="4"></circle>
+                  <rect x="106" y="44" width="78" height="10"></rect>
+                  <rect x="188" y="44" width="60" height="10"></rect>
+                  <rect x="116" y="194" width="62" height="10"></rect>
+                  <rect x="184" y="194" width="48" height="10"></rect>
+                  <rect x="136" y="140" width="96" height="30"></rect>
+                  <path d="M136 150 a5 5 0 0 1 0 10"></path>
+                  <path d="M140 140 v-5 M140 170 v5"></path>
+                  <path d="M146.6 140 v-5 M146.6 170 v5"></path>
+                  <path d="M153.2 140 v-5 M153.2 170 v5"></path>
+                  <path d="M159.8 140 v-5 M159.8 170 v5"></path>
+                  <path d="M166.4 140 v-5 M166.4 170 v5"></path>
+                  <path d="M173 140 v-5 M173 170 v5"></path>
+                  <path d="M179.6 140 v-5 M179.6 170 v5"></path>
+                  <path d="M186.2 140 v-5 M186.2 170 v5"></path>
+                  <path d="M192.8 140 v-5 M192.8 170 v5"></path>
+                  <path d="M199.4 140 v-5 M199.4 170 v5"></path>
+                  <path d="M206 140 v-5 M206 170 v5"></path>
+                  <path d="M212.6 140 v-5 M212.6 170 v5"></path>
+                  <path d="M219.2 140 v-5 M219.2 170 v5"></path>
+                  <path d="M225.8 140 v-5 M225.8 170 v5"></path>
+                  <rect x="96" y="122" width="22" height="9" rx="4.5"></rect>
+                  <rect x="86" y="58" width="16" height="16"></rect>
+                  <circle cx="94" cy="66" r="4.5"></circle>
+                  <rect x="222" y="104" width="18" height="26"></rect>
+                  <rect x="110" y="84" width="8" height="5"></rect>
+                  <rect x="110" y="94" width="8" height="5"></rect>
+                  <rect x="110" y="104" width="8" height="5"></rect>
+                  <rect x="330" y="40" width="180" height="84"></rect>
+                  <circle cx="376" cy="82" r="30"></circle>
+                  <circle cx="376" cy="82" r="21"></circle>
+                  <circle cx="464" cy="82" r="30"></circle>
+                  <circle cx="464" cy="82" r="21"></circle>
+                  <path d="M361 82 h30 M376 67 v30 M449 82 h30 M464 67 v30" stroke-width="0.8"></path>
+                  <rect x="412" y="54" width="16" height="8" rx="4"></rect>
+                  <path d="M408 124 v14"></path>
+                  <path d="M416 124 v14"></path>
+                  <path d="M424 124 v14"></path>
+                  <path d="M432 124 v14"></path>
+                  <rect x="352" y="262" width="96" height="50"></rect>
+                  <rect x="336" y="270" width="128" height="10"></rect>
+                  <circle cx="380" cy="252" r="12"></circle>
+                  <rect x="372" y="246" width="78" height="12" rx="6" transform="rotate(-18 380 252)"></rect>
+                  <circle cx="380" cy="252" r="3"></circle>
+                  <path d="M352 300 C330 300 326 320 306 322"></path>
+                  <path d="M30 228 v8 M250 228 v8 M30 232 H250" stroke-width="0.8"></path>
+                </g>
+                <g fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" opacity="0.8">
+                  <path d="M250 112 H296 V150 H416 V138"></path>
+                  <path d="M250 182 H292 V292 H352"></path>
+                </g>
+                <g fill="currentColor">
+                  <rect x="110" y="47" width="4" height="4"></rect>
+                  <rect x="117.6" y="47" width="4" height="4"></rect>
+                  <rect x="125.2" y="47" width="4" height="4"></rect>
+                  <rect x="132.8" y="47" width="4" height="4"></rect>
+                  <rect x="140.4" y="47" width="4" height="4"></rect>
+                  <rect x="148" y="47" width="4" height="4"></rect>
+                  <rect x="155.6" y="47" width="4" height="4"></rect>
+                  <rect x="163.2" y="47" width="4" height="4"></rect>
+                  <rect x="170.8" y="47" width="4" height="4"></rect>
+                  <rect x="178.39999999999998" y="47" width="4" height="4"></rect>
+                  <rect x="190" y="47" width="4" height="4"></rect>
+                  <rect x="197.6" y="47" width="4" height="4"></rect>
+                  <rect x="205.2" y="47" width="4" height="4"></rect>
+                  <rect x="212.8" y="47" width="4" height="4"></rect>
+                  <rect x="220.4" y="47" width="4" height="4"></rect>
+                  <rect x="228" y="47" width="4" height="4"></rect>
+                  <rect x="235.6" y="47" width="4" height="4"></rect>
+                  <rect x="243.2" y="47" width="4" height="4"></rect>
+                  <rect x="119" y="197" width="4" height="4"></rect>
+                  <rect x="126.6" y="197" width="4" height="4"></rect>
+                  <rect x="134.2" y="197" width="4" height="4"></rect>
+                  <rect x="141.8" y="197" width="4" height="4"></rect>
+                  <rect x="149.4" y="197" width="4" height="4"></rect>
+                  <rect x="157" y="197" width="4" height="4"></rect>
+                  <rect x="164.6" y="197" width="4" height="4"></rect>
+                  <rect x="172.2" y="197" width="4" height="4"></rect>
+                  <rect x="186" y="197" width="4" height="4"></rect>
+                  <rect x="193.6" y="197" width="4" height="4"></rect>
+                  <rect x="201.2" y="197" width="4" height="4"></rect>
+                  <rect x="208.8" y="197" width="4" height="4"></rect>
+                  <rect x="216.4" y="197" width="4" height="4"></rect>
+                  <rect x="224" y="197" width="4" height="4"></rect>
+                  <circle cx="296" cy="112" r="2.5"></circle>
+                  <circle cx="416" cy="138" r="2.5"></circle>
+                  <circle cx="292" cy="182" r="2.5"></circle>
+                  <circle cx="352" cy="292" r="2.5"></circle>
+                </g>
+                <g class="hp-hw-labels" fill="currentColor">
+                  <text x="150" y="118">UNO</text>
+                  <text x="140" y="250" text-anchor="middle">68.6 mm</text>
+                  <text x="30" y="270">ARDUINO UNO R3</text>
+                  <text x="420" y="176" text-anchor="middle">HC-SR04 · ULTRASONIC</text>
+                  <text x="400" y="336" text-anchor="middle">SG90 · SERVO</text>
+                </g>
+              </svg>
+            </div>
+            <h3 class="hp-w-name hp-pixel">Bare Metal</h3>
+            <p class="hp-w-kind">Hardware Hackathon</p>
+            <p class="hp-w-num"><b class="hp-pixel">24</b><span>Participants</span></p>
+            <div class="hp-w-acts">
+              <a
+                class="hp-w-cta"
+                href="https://www.linkedin.com/feed/update/urn:li:activity:7516396646767968257"
+                rel="noopener noreferrer"
+                >▶ Watch the video ↗</a
+              >
+            </div>
+          </li>
+          <li
+            class="hp-w hp-w-half"
+            style="--op-base: #2a026a; --op-ink: #ffffff; --op-accent: #9670ff; --op-on-accent: #1d1d1b"
+          >
+            <header class="hp-w-head">
+              <span class="hp-w-tag hp-pixel">OP002</span><span class="hp-w-meta">26 Sept 2026 · Stuttgart</span>
+            </header>
+            <figure class="hp-w-kv">
+              <img
+                src="/assets/home/looks/veni-vidi-reachy.jpg"
+                alt="VENI VIDI REACHY: the Reachy robot wearing a laurel wreath in front of a code screen"
+              />
+            </figure>
+            <h3 class="hp-w-name hp-pixel">Veni Vidi Reachy</h3>
+            <p class="hp-w-kind">Physical AI Hackathon</p>
+            <p class="hp-w-num"><b class="hp-pixel">25</b><span>Participants</span></p>
+            <div class="hp-w-acts">
+              <a
+                class="hp-w-cta"
+                href="https://www.linkedin.com/feed/update/urn:li:activity:7511794903853555712"
+                rel="noopener noreferrer"
+                >▶ Watch the recap ↗</a
+              >
+            </div>
+          </li>
+          <li
+            class="hp-w hp-w-half hp-w-tex-checker"
+            style="--op-base: #ffe1f9; --op-ink: #232323; --op-accent: #d0578e; --op-on-accent: #1d1d1b"
+          >
+            <header class="hp-w-head">
+              <span class="hp-w-tag hp-pixel">OP001</span><span class="hp-w-meta">23 Jul 2026 · Karlsruhe</span>
+            </header>
+            <figure class="hp-w-kv">
+              <img
+                src="/assets/home/looks/slopathon.png"
+                alt="SLOPATHON: retro OS windows on a pink grid around a blue pixel pyramid"
+              />
+            </figure>
+            <h3 class="hp-w-name hp-pixel">Slopathon</h3>
+            <p class="hp-w-num"><b class="hp-pixel">20</b><span>Participants</span></p>
+            <div class="hp-w-acts"><a class="hp-w-cta" href="/projects.html">Enter the slop museum →</a></div>
+          </li>
+        </ol>
+      </section>
+      <!-- ═══ 05 THE COMMUNITY SO FAR: numbers (data-count is the number the counter runs to) ═══ -->
+      <section class="hp-panel hp-blue">
+        <div class="hp-wrap hp-tally-wrap">
+          <header>
+            <p class="hp-kicker">The community so far</p>
+            <h2 class="hp-h2">Built by the people who show up.</h2>
+          </header>
+          <div class="hp-tally-box">
+            <dl class="hp-tally">
+              <div class="hp-tally-row is-lead">
+                <dt><b>People</b><span>Signed up to build at one of our ops.</span></dt>
+                <dd class="hp-pixel">
+                  <span class="hp-sr">200+</span><span aria-hidden="true" data-count="202">200+</span>
+                </dd>
+              </div>
+              <div class="hp-tally-row">
+                <dt><b>Ops</b><span>From one evening to a weekend.</span></dt>
+                <dd class="hp-pixel"><span class="hp-sr">5</span><span aria-hidden="true" data-count="5">5</span></dd>
+              </div>
+              <div class="hp-tally-row">
+                <dt><b>Cities</b><span>Karlsruhe, Stuttgart, München.</span></dt>
+                <dd class="hp-pixel"><span class="hp-sr">3</span><span aria-hidden="true" data-count="3">3</span></dd>
+              </div>
+              <div class="hp-tally-row">
+                <dt><b>Teams</b><span>Formed at the ops, on our platform.</span></dt>
+                <dd class="hp-pixel">
+                  <span class="hp-sr">23</span><span aria-hidden="true" data-count="23">23</span>
+                </dd>
+              </div>
+              <div class="hp-tally-row">
+                <dt><b>Builds</b><span>Games, gadgets and gloriously useless tools, all demoed live.</span></dt>
+                <dd class="hp-pixel">
+                  <span class="hp-sr">38+</span><span aria-hidden="true" data-count="38">38+</span>
+                </dd>
+              </div>
+            </dl>
+            <p class="hp-tally-foot"><b>0 slides.</b> Every demo is live.</p>
+          </div>
+        </div>
+      </section>
+      <!-- ═══ 06 FOR COMPANIES: formats, package table, fair play ═══ -->
+      <section id="companies" class="hp-panel hp-blue hp-tight-top">
+        <div class="hp-wrap">
+          <p class="hp-kicker hp-center">8 partners so far</p>
+          <h2 class="hp-h2 hp-center">Bring a challenge.</h2>
+          <p class="hp-sub hp-center">Meet builders through what they build, not a booth.</p>
+          <div class="hp-offer">
+            <div class="hp-offer-ways">
+              <div>
+                <span class="hp-kicker">Hack Sprint</span>
+                <h3 class="hp-h3">Hack Sprint</h3>
+                <span class="hp-mono-s hp-offer-tag">3–4 hours</span>
+                <p>
+                  One evening, one challenge from you. Teams build on it and demo the same night. The easiest way to
+                  start.
+                </p>
+              </div>
+              <div>
+                <span class="hp-kicker">Challenge</span>
+                <h3 class="hp-h3">Challenge</h3>
+                <span class="hp-mono-s hp-offer-tag">Inside an op</span>
+                <p>Your challenge or track inside a HACK//OPS hackathon. Teams choose it; you mentor and judge it.</p>
+              </div>
+              <div>
+                <span class="hp-kicker">Hackathon</span>
+                <h3 class="hp-h3">Hackathon</h3>
+                <span class="hp-mono-s hp-offer-tag">1 day or a weekend</span>
+                <p>A whole op hosted with you: your theme, your tech, your venue or ours. We run the format.</p>
+              </div>
+            </div>
+            <table class="hp-offer-table">
+              <thead>
+                <tr>
+                  <th scope="col"><span class="hp-kicker">What you get</span></th>
+                  <th scope="col">Hack Sprint</th>
+                  <th scope="col">Challenge</th>
+                  <th scope="col">Hackathon</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Time with builders, live demos, opt-in contacts</td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                </tr>
+                <tr>
+                  <td>Logo, photos and a recap for employer branding</td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                </tr>
+                <tr>
+                  <td>A short talk on stage</td>
+                  <td class="hp-no"><span class="hp-sr">Not included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                </tr>
+                <tr>
+                  <td>Co-design the format and a “hosted with” title</td>
+                  <td class="hp-no"><span class="hp-sr">Not included</span></td>
+                  <td class="hp-no"><span class="hp-sr">Not included</span></td>
+                  <td class="hp-yes"><span class="hp-sr">Included</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="hp-offer-foot">
+              <p class="hp-fine">
+                <b>Fair play.</b> If a partner is hiring, participants are told openly. No guaranteed hires. Contact
+                data only with opt-in. IP stays with participants by default; anything else is agreed per event.
+              </p>
+              <a
+                class="hp-btn hp-btn-blue"
+                href="mailto:team@hackops.tech?subject=HACK%2F%2FOPS%3A%20bringing%20a%20challenge"
+                >Ask for the one-pager</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ═══ 07 CALL TO ACTION ═══ -->
+      <section class="hp-panel hp-black">
+        <div class="hp-wrap">
+          <h2 class="hp-h2 hp-center">Come build at<br />the next op.</h2>
+          <div class="hp-center hp-cta-row">
+            <a class="hp-btn hp-btn-light hp-glow" href="https://luma.com/01bjklbs" rel="noopener noreferrer"
+              >Sign up for OP005</a
+            ><a class="hp-link hp-mono-s" href="https://luma.com/hackops" rel="noopener noreferrer"
+              >Or follow every op on Luma ↗</a
+            >
+          </div>
+          <div class="hp-cta-box">
+            <div>
+              <h3 class="hp-h3">A company?</h3>
+              <p>Bring a challenge to an op, or host one with us.</p>
+            </div>
+            <a
+              class="hp-btn hp-btn-outline"
+              href="mailto:team@hackops.tech?subject=HACK%2F%2FOPS%3A%20bringing%20a%20challenge"
+              >Write to us</a
+            >
+          </div>
+        </div>
+      </section>
+      <!-- ═══ 08 FAQ ═══ -->
+      <section class="hp-panel hp-light">
+        <div class="hp-wrap hp-faq">
+          <div class="hp-faq-side">
+            <h2 class="hp-h2">Frequently<br />asked questions</h2>
+            <p class="hp-sub">Anything else: team@hackops.tech</p>
+            <a class="hp-btn hp-btn-blue" href="https://luma.com/01bjklbs" rel="noopener noreferrer">Next event</a>
+          </div>
+          <div class="hp-faq-list">
+            <div>
+              <p class="hp-kicker">Building</p>
+              <div>
+                <details class="hp-q" data-state="closed">
+                  <summary>How do I sign up?<span class="hp-plus" aria-hidden="true"></span></summary>
+                  <div class="hp-acc-body">
+                    <p>
+                      On Luma. Each op has its own page; follow the HACK//OPS calendar there and you'll see every new
+                      op.
+                    </p>
+                  </div>
+                </details>
+                <details class="hp-q" data-state="closed">
+                  <summary>Do I need a team?<span class="hp-plus" aria-hidden="true"></span></summary>
+                  <div class="hp-acc-body">
+                    <p>No. Teams form at the op on our platform. Come alone or bring friends.</p>
+                  </div>
+                </details>
+                <details class="hp-q" data-state="closed">
+                  <summary>Do I have to pitch?<span class="hp-plus" aria-hidden="true"></span></summary>
+                  <div class="hp-acc-body"><p>No slides. Teams show what they built, live, in a few minutes.</p></div>
+                </details>
+                <details class="hp-q" data-state="closed">
+                  <summary>Where can I see what people built?<span class="hp-plus" aria-hidden="true"></span></summary>
+                  <div class="hp-acc-body">
+                    <p>In the showcase: every project its team chose to publish, op by op.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <div>
+              <p class="hp-kicker">Companies</p>
+              <div>
+                <details class="hp-q" data-state="closed">
+                  <summary>Can my company bring a challenge?<span class="hp-plus" aria-hidden="true"></span></summary>
+                  <div class="hp-acc-body">
+                    <p>
+                      Yes. A challenge inside an op, a Hack Sprint for one evening, or a whole hackathon hosted with
+                      you. Write to us.
+                    </p>
+                  </div>
+                </details>
+                <details class="hp-q" data-state="closed">
+                  <summary>Do you share participants' data?<span class="hp-plus" aria-hidden="true"></span></summary>
+                  <div class="hp-acc-body"><p>Only from people who opted in, and they can withdraw any time.</p></div>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ═══ 09 FOOTER: links, credits, Luma calendar ═══ -->
+      <footer class="hp-foot">
+        <div class="hp-wrap">
+          <div class="hp-foot-cols">
+            <div class="hp-foot-about">
+              <span class="hp-wordmark">HACK//OPS</span>
+              <p>Everyone builds here.</p>
+            </div>
+            <div>
+              <p class="hp-kicker">Ops</p>
+              <a href="/#next">Next op</a><a href="/#ops">Ops so far</a><a href="/projects.html">Projects</a>
+            </div>
+            <div>
+              <p class="hp-kicker">Companies</p>
+              <a href="/#companies">Formats</a
+              ><a href="mailto:team@hackops.tech?subject=HACK%2F%2FOPS">team@hackops.tech</a
+              ><a href="/photos.html">Photo notice</a>
+            </div>
+            <div>
+              <p class="hp-kicker">Follow</p>
+              <a href="https://luma.com/hackops" rel="noopener noreferrer">Luma ↗</a
+              ><a href="https://www.instagram.com/hackops.tech" rel="noopener noreferrer">Instagram ↗</a
+              ><a href="https://www.linkedin.com/company/hack-ops/" rel="noopener noreferrer">LinkedIn ↗</a
+              ><a href="https://github.com/HACK-OPS-KA" rel="noopener noreferrer">GitHub ↗</a>
+            </div>
+          </div>
+          <div class="hp-foot-row hp-mono-s">
+            <span>© 2026 HACK//OPS</span
+            ><span class="hp-credits"
+              >Sky:
+              <a href="https://unsplash.com/photos/zlGobrmAuyE" rel="noopener noreferrer">engin akyurt / Unsplash</a> ·
+              Reflections:
+              <a href="https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky" rel="noopener noreferrer"
+                >Poly Haven</a
+              ></span
+            ><a href="https://luma.com/hackops" rel="noopener noreferrer"
+              >Subscribe to the Luma calendar to stay updated ↗</a
+            >
+          </div>
+        </div>
+        <div class="hp-giant" aria-hidden="true"><span class="hp-wordmark">HACK//OPS</span></div>
+      </footer>
     </div>
-    <div class="dicon deco" aria-hidden="true" data-x="8950" data-y="4520" data-rot="0" style="--dc: var(--sky)">
-      <span class="px doc"></span><span class="lbl">readme.txt</span>
-    </div>
-    <div class="dicon deco" aria-hidden="true" data-x="4420" data-y="8150" data-rot="0" style="--dc: var(--pink)">
-      <span class="px pyra"></span><span class="lbl">slop.exe</span>
-    </div>
-    <div class="dicon deco" aria-hidden="true" data-x="9300" data-y="7480" data-rot="0" style="--dc: var(--purple)">
-      <span class="px folder"></span><span class="lbl">op_series</span>
-    </div>
-    <div class="dicon deco" aria-hidden="true" data-x="6180" data-y="3620" data-rot="0" style="--dc: var(--silver)">
-      <span class="px doc"></span><span class="lbl">sponsors.tba</span>
-    </div>
-
-  </div>
-</main>
-
-<footer aria-hidden="true">
-  <div id="hud">X 00000 · Y 00000 · FIELD 00000</div>
-</footer>
-
-<div id="hint" aria-hidden="true">SCROLL TO FLY</div>
-
-<button id="nextbtn" type="button" data-interactive aria-label="Next stop">&rarr;</button>
-
-<div id="camctl" data-interactive role="group" aria-label="Camera controls">
-  <button id="zin" type="button" aria-label="Zoom in" title="Zoom in">+</button>
-  <button id="zout" type="button" aria-label="Zoom out" title="Zoom out">&minus;</button>
-  <button id="lvl" type="button" aria-label="Level the camera" title="Level the camera">&deg;</button>
-</div>
-
-<script src="engine.js?v=desktop-6"></script>
-</body>
+    <script type="module" src="/home.js?v=1"></script>
+  </body>
 </html>
