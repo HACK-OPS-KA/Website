@@ -22,13 +22,14 @@ open <http://localhost:8000>. use an http server because the site loads javascri
 | path | purpose |
 | --- | --- |
 | `index.html` | community landing page |
-| `site.css` | styles and design variables |
-| `engine.js` | camera navigation and interactions |
-| `projects.html` / `projects.json` | project archive interface and data |
-| `vote.js` / `admin.html` | event voting interface and administration |
+| `home.css` | styles and design variables for the public pages |
+| `home.js` | 3d hero, sliding rows, counting numbers, reel buttons |
+| `photos.html` | photo notice |
+| `projects.html` | the slop museum (op//001 project archive) |
+| `vote.js` / `admin.html` / `site.css` | event voting interface, administration and their styles |
 | `firebase-init.js` / `firestore.rules` | firebase configuration and access rules |
-| `assets/` | images and fonts |
+| `assets/` | images, 3d assets, logos, fonts, vendored three.js |
 
 ## editing
 
-read [the editing guide](EDITING.md) before changing content. preserve the lowercase visual style and verify layouts at desktop and mobile sizes. voting functionality depends on its firebase configuration and deployed rules.
+read [the editing guide](EDITING.md) before changing content. verify layouts at desktop and mobile sizes. voting functionality depends on its firebase configuration and deployed rules.

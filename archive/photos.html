@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>photo notice · hack//ops</title>
+<meta name="description" content="How HACK//OPS handles photos and video at its events: what we shoot, where it gets published, and how to say no." />
+<meta name="robots" content="noindex, follow" />
+<meta property="og:title" content="photo notice · hack//ops" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="What we shoot at hack//ops events, where it gets published, and how to say no." />
+<meta property="og:url" content="https://hackops.tech/photos.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Press+Start+2P&family=Hanken+Grotesk:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="preload" href="/assets/good-times.otf" as="font" type="font/otf" crossorigin />
+<link rel="stylesheet" href="projects.css?v=2" />
+<script>
+  /* apply saved theme before first paint; shared key with the main desktop */
+  (function () {
+    try {
+      var t = localStorage.getItem('hackops-theme');
+      if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="prose-page">
+
+<div class="bar">
+  <a class="back" href="/archive/">‹ back to desktop</a>
+  <a class="brand" href="/archive/">hack//ops</a>
+  <span class="spacer"></span>
+  <span class="tag">photo notice</span>
+  <button class="toggle" id="themeToggle" title="toggle lights" aria-label="toggle dark mode">◐</button>
+</div>
+
+<header class="hero">
+  <p class="kicker">photos · video · your face</p>
+  <h1>the photo notice</h1>
+  <p>We document our events. You can say no. Saying no costs you nothing and
+     changes nothing about how welcome you are.</p>
+</header>
+
+<main class="prose">
+
+  <h2>the short version</h2>
+  <ul>
+    <li>We take photos and short videos at hack//ops events.</li>
+    <li>They go on hackops.tech, LinkedIn, Instagram, event pages, and partner
+      recaps for that operation.</li>
+    <li>On registration (lu.ma) you answer <strong>yes</strong> or
+      <strong>no</strong>. We use that answer at check-in.</li>
+    <li>Want a picture taken down later? Write to
+      <a href="mailto:team@hackops.tech">team@hackops.tech</a>.</li>
+  </ul>
+
+  <h2>what we shoot</h2>
+  <p>Mostly the room and the work: benches, tools, screens, prototypes, demos,
+     the podium. People show up in a lot of those frames while building.</p>
+  <p>We do not shoot your screen, notes, or badge on purpose. If something on
+     your desk should stay private, say so and we drop the frame.</p>
+
+  <h2>where it goes</h2>
+  <ul>
+    <li><strong>hackops.tech</strong>: event and archive pages</li>
+    <li><strong>LinkedIn</strong> and <strong>Instagram</strong>: recaps and
+      announcements</li>
+    <li><strong>Event pages</strong> (lu.ma) and material for the partners of
+      that specific operation</li>
+  </ul>
+  <p>Once a picture is on a social platform, that platform keeps it under its
+     own terms. Tell us early if you want out.</p>
+
+  <h2>saying no</h2>
+  <p>Pick <strong>no</strong> on the lu.ma registration question. At check-in we
+     give you a no-photo sticker or lanyard and brief whoever is shooting.</p>
+  <p>You can still change your mind on the day: tell any organiser, or the
+     person with the camera, including mid shot. We note it.</p>
+  <p>Opting out covers pictures where you are recognisable. Wide room shots are
+     harder; if you need to be out of those too, tell us and we work it out.</p>
+
+  <h2>takedowns</h2>
+  <p>Mail <a href="mailto:team@hackops.tech">team@hackops.tech</a>. Point at the
+     picture or describe it. We remove it from everything we control. No reason
+     needed.</p>
+
+  <h2>the files</h2>
+  <ul>
+    <li>Originals stay in our storage, seen by the crew working on the recap.</li>
+    <li>We do not sell them or hand partners a photo library. Partner uses are
+      picked and sent one by one.</li>
+    <li>No face recognition. No tagging without asking.</li>
+    <li>Published shots stay in that operation's archive until someone asks us
+      to pull one.</li>
+  </ul>
+
+  <h2>who to ask</h2>
+  <p>hack//ops, Karlsruhe.
+     <a href="mailto:team@hackops.tech">team@hackops.tech</a></p>
+
+</main>
+
+<footer>
+  <a href="/archive/">the desktop</a> ·
+  <a href="/archive/projects.html">the slop museum</a> ·
+  <a href="https://www.linkedin.com/company/hack-ops/" target="_blank" rel="me noopener">linkedin</a> ·
+  <a href="https://www.instagram.com/hackops.tech" target="_blank" rel="me noopener">instagram</a> ·
+  <a href="https://github.com/HACK-OPS-KA" target="_blank" rel="me noopener">github</a>
+</footer>
+
+<script>
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    var dark = document.documentElement.classList.toggle('dark');
+    try { localStorage.setItem('hackops-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+</script>
+</body>
+</html>

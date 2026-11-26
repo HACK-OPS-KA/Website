@@ -4,7 +4,7 @@
   'use strict';
 
   var REMOTE = 'https://raw.githubusercontent.com/HACK-OPS-KA/SLOPATHON/main/projects.json';
-  var LOCAL = 'projects.json';
+  var LOCAL = '/projects.json';
 
   // final op//001 vote result, keyed by project slug. This lives here rather
   // than in projects.json because that file is generated in the SLOPATHON

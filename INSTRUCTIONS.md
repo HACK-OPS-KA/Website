@@ -13,9 +13,13 @@ For non-technical content edits there is a shorter German guide: [EDITING.md](ED
 A static site. No build step, no framework, no server. Plain HTML, CSS and vanilla
 JavaScript served directly by GitHub Pages.
 
-The front page is a "camera world": a fixed stage with a pastel grid where content
-sits as absolutely positioned retro desktop windows in a large coordinate space.
-The camera pans and zooms between stops instead of the page scrolling.
+The front page is one scrolling page: a hero with a live 3D pyramid over a sky
+photo, the next operation in its own colours, two ways in (builders, companies),
+every past operation as a tile in its own look, the community numbers, the
+formats for companies, an FAQ and the footer. The same design runs on the ops
+platform at https://ops.nedilko.tech/page, where it reads live numbers from the
+event database; this repo holds a static copy of it, so numbers and ops here are
+edited by hand.
 
 The one dynamic part is the in-room vote system, which is backed by Firebase
 because GitHub Pages cannot run server code or enforce timing. It ran for
@@ -23,31 +27,32 @@ slopathon and is kept, unmounted, for the next operation.
 
 ### Operation numbering
 
-Slopathon is **op//001** and the next operation is **op//002** (internal code
-name: bare metal; public title still TBD). That matches the archive. An
-earlier planning order had them the other way around, which is
-why `firebase-init.js` still holds `EVENT_ID = "op002-slopathon"`: it is a live
-Firestore path with the real results under it and must not be renamed. Do not
-put the internal code name in user-visible copy.
+Slopathon is **op//001**. `firebase-init.js` still holds
+`EVENT_ID = "op002-slopathon"`: it is a live Firestore path with the real results
+under it and must not be renamed.
 
 ### File map
 
 | File | Purpose |
 |---|---|
-| `index.html` | The whole front page. All content lives here inside `<div id="world">`. |
-| `site.css` | All styling. Design tokens (colors, fonts) are the variables at the top. |
-| `engine.js` | Camera world engine: placement, camera stops, flight, gestures, ASCII pyramid. |
-| `projects.html` / `.css` / `.js` / `.json` | The slop museum, the op//001 archive. |
-| `photos.html` | Photo and privacy notice for event photography. Uses `projects.css`. |
+| `index.html` | The whole front page. Each section starts with a `═══ 01 HERO ═══` style comment. |
+| `home.css` | All styling for `index.html`, `photos.html` and `projects.html`. Colours are the variables in `.hp` at the top. |
+| `home.js` | Front page behaviour: the 3D hero, slide-open rows, counting numbers, reel buttons. The page works without it. |
+| `photos.html` | Photo and privacy notice for event photography. Keep the URL: event pages link to it. |
+| `projects.html` | The slop museum, the op//001 archive (a snapshot of the SLOPATHON repo's projects.json). |
+| `assets/home/` | Everything the new pages show: sky, 3D pyramid, partner logos, op key visuals, game covers. |
+| `assets/vendor/three/` | three.js r169 (MIT), loaded through the import map in `index.html`. |
 | `EVENT-BLURBS.md` | Paste-ready copy for lu.ma, socials and posters. Keep in sync with `photos.html`. |
 | `vote.js` | Vote widget: countdown, modal, casting a vote. Not mounted between events. |
 | `admin.html` | Vote administration: sign in, manage teams, set the voting window. |
+| `site.css` | Styles of `admin.html` and the vote widget (the old front page's stylesheet). |
 | `firebase-init.js` | Shared Firebase bootstrap and the `EVENT_ID` constant. |
 | `firestore.rules` | Firestore security rules. The real enforcement layer. |
+| `projects.json` | The op//001 project list, as generated in the SLOPATHON repo. |
+| `archive/` | The old camera-world front page, slop museum and photo notice, kept at hackops.tech/archive/ (noindex). Uses `/site.css` and `/assets/` from the root. |
 | `CNAME` | Holds `hackops.tech`. This is what claims the custom domain. Do not delete. |
 | `.nojekyll` | Stops GitHub from running Jekyll over the files. |
 | `serve.ps1` | Local dev server, serves the folder it sits in. |
-| `assets/` | Images and the Good Times font used for the wordmark. |
 
 ---
 
@@ -74,118 +79,57 @@ site uses JavaScript modules and `fetch`, which browsers block on `file://` URLs
 
 ## 3. Editing content
 
-All page content is in `index.html` between `<div id="world">` and its closing tag.
-Each block is marked with a comment heading:
+All front page content is in `index.html`. Each section starts with a comment:
 
 | Section | Search for | What it controls |
 |---|---|---|
-| Home | `01 HOME` | Title, tagline, the "hack//ops runs ..." list |
-| Announcement | `announcement dialog` | The pulsing card on the home view. Always points at the next operation |
-| Easter egg | `MICROPRINT` | Hidden microprint, reachable by typing "slop" or clicking the pyramid 5 times |
-| Manifesto | `03 MANIFESTO` | Self description and the four rules |
-| Operations | `04 OPERATIONS` | The next event, its tracks and partners, plus everything in planning |
-| Past ops | `05 PAST OPS` | Finished operations with their dates, links and final standings |
-| Crew | `06 CREW` | Names and roles |
-| Socials | `socials:` | LinkedIn, Instagram, GitHub, lu.ma, photo notice, contact address |
-| Decoration | `desktop decoration` | Fake windows and desktop icons |
+| Hero | `01 HERO` | The title, the "Next event" button (link to the next op on lu.ma), the partner logos |
+| Next op | `02 NEXT OP` | The upcoming operation: name, dates, place, key visual, its colours (`--op-*` in the `style` attribute), the steps |
+| Two ways in | `03 TWO WAYS IN` | What builders get, the three formats for companies |
+| Ops so far | `04 OPS SO FAR` | One tile per past operation, and the game jam band with its winners |
+| Numbers | `05 THE COMMUNITY` | The numbers; `data-count` is what the counter runs to, the text is what it ends on |
+| Companies | `06 FOR COMPANIES` | Formats, the package table, the fair play note |
+| FAQ | `08 FAQ` | Questions and answers |
+| Footer | `09 FOOTER` | Links, contact address, credits for the sky photo and reflections |
 
-When an operation finishes, move its card from Operations down into Past ops, set
-its status to `archived`, add a standings card next to it, and repoint the home
-announcement card at whatever is next.
+Typical changes:
+
+- **A new op is announced:** in `02 NEXT OP` change name, dates, place and the
+  lu.ma link (also the "Next event" button in `01 HERO`, the "Sign up" buttons and
+  the FAQ button: search for the old lu.ma link). Put its square key visual in
+  `assets/home/looks/` and point the `<img>` at it.
+- **An op is over:** copy a tile in `04 OPS SO FAR`, set its colours
+  (`--op-base`, `--op-ink`, `--op-accent`, `--op-on-accent`), number, name, date,
+  participants and link, and update the numbers in `05`.
+- **A new partner:** add a white logo (SVG, or PNG with transparency) to
+  `assets/home/partners/` and copy a `hp-logo-slot` in **both** copies of the
+  logo set in `01 HERO` (the strip loops by sliding one copy after the other).
 
 ### Style rules
 
-- Everything lowercase. It is part of the design.
 - No em dashes, no emojis.
 - Only name sponsors once the deal is signed.
-- Colors only through the variables, and mind the split:
-  - `--pink`, `--purple`, `--sky`, `--silver`, `--red`, `--gold` are **fills**:
-    title bars, icons, tints. They are 2.0 to 2.9:1 on white, so they are never
-    used for text.
-  - `--pink-txt`, `--purple-txt`, `--sky-txt`, `--silver-txt`, `--red-txt`,
-    `--gold-txt` are the same accents **as text**. They flip with the theme:
-    darkened on the light print, back to the pastels in dark mode.
-  - `--action` is the button fill, dark enough for white text.
-  - `--tbar-ink` is the dark ink used on pastel title bars.
-  - `--ink-body` for anything a visitor has to read, `--ink` for quiet labels,
-    `--ink-2` for pure decoration only.
-
-### How positioning works
-
-This trips people up, so it is worth understanding.
-
-- `data-x` / `data-y` set where an **element itself** sits in world space.
-- `data-cx` / `data-cy` set only where the **camera** points for that stop. They do
-  not move any element. This lets the camera centre on a cluster of cards without
-  dragging the title block along with it.
-- `data-vw` / `data-vh` define the world space rectangle a camera stop frames.
-  Actual on screen scale is `min(innerWidth / vw, innerHeight / vh) * 0.85`, so
-  whichever ratio is smaller decides the zoom. Increasing `vh` zooms out.
-- Any of these with an `-m` suffix (`data-x-m`, `data-cy-m`, `data-vh-m`,
-  `data-bearing-m`) overrides the base value on mobile, which is any viewport
-  640px wide or narrower.
-
-Practical consequence: if you change a card's size in CSS, re-check the layout at
-both 1280x800 and 375x812. Hand calculating heights from font sizes and padding
-gets close but is usually off by 10 to 20 pixels. Measure in the browser with
-`getBoundingClientRect()` and adjust.
-
-Adding a new camera stop: give an element `data-stop`, `data-x`, `data-y`,
-`data-vw` and `data-vh`. It gets a navigation chip automatically. Document order
-is tour order.
-
-### The phone layout is a different world
-
-Below 640px the world is not the scattered desktop at all. It is two columns: the
-home block at x 6000, and everything op-related at x 7480, running top to bottom
-through operations and then past ops. Every stop is framed with `data-vw-m="340"`,
-which puts the camera at roughly **scale 1.0 on a 375pt phone**
-(`0.85 * 375 / 340`). That is the whole trick: one world unit is about one screen
-pixel, so the mobile sizes in `site.css` can be read as ordinary phone CSS, and
-a 340 wide card really does render about 320px wide.
-
-Before this the same cards were framed 1500 to 2100 world units wide and landed at
-scale 0.15 to 0.47, which is why everything had to be pinched to be read.
-
-To retune a column: set the viewport to 375x812, read the real card heights with
-`offsetHeight` (they are untransformed, unlike `getBoundingClientRect`), then
-stack the `data-y-m` values with a gap and point `data-cy-m` at the card the stop
-should land on. The camera shows `vh_m / 0.85` world units of height at most, and
-the 52px taskbar eats the top of it.
+- Colours only through the variables at the top of `home.css` (`--hp-blue`,
+  `--hp-paper`, `--hp-ink`, ...) and the per-op `--op-*` variables. Text on a
+  coloured tile uses `--op-ink`; buttons use `--op-accent` with `--op-on-accent`.
+- The pixel face is Press Start 2P (the Slopathon title face); every glyph is as
+  wide as it is tall, so long words need a smaller size.
+- Check every change at desktop width and at 375 px.
 
 ---
 
-## 3a. Touch, keyboard and contrast
+## 3a. Motion, keyboard and contrast
 
-These are easy to break by accident, so here is what is deliberate.
+**Motion.** The 3D hero, the sliding rows and the counting numbers all check
+`prefers-reduced-motion`; with it on, the page shows the still pyramid
+(`assets/home/3d/pyramid-*.webp`) and plain rows. The 3D scene pauses when the
+hero is off screen or the tab is hidden.
 
-**Gestures.** `engine.js` tracks every pointer, including ones that land on cards
-and buttons. That matters: a phone card fills the screen, so if pointers on
-interactive elements are ignored, the second finger of a pinch never registers and
-pinch zoom silently does nothing. Pinch anchors the world point under the finger
-midpoint, which also gives two finger panning. Safari runs its own `gesture*`
-events on top of the pointer stream and will zoom the page regardless of
-`user-scalable=no`, so those events are cancelled and drive the camera instead.
+**Without JavaScript** everything still reads: the rows are plain `<details>`,
+the numbers are already in the markup, the pyramid is the still image.
 
-A flick advances the tour, a drag does not: the test is fast (under 400ms), long
-(over 80px), clearly vertical, and above a velocity floor. A looser test means
-panning teleports you to another stop by accident.
-
-Any drag or pinch suppresses the click that would otherwise fire, so dragging from
-a button pans the world instead of pressing it.
-
-**Keyboard.** The taskbar sits before the stage in the DOM so tab order starts at
-the navigation rather than deep inside the world. Focus moves the camera: anything
-inside `#world` that takes keyboard focus gets flown to, because otherwise you can
-tab onto a link parked somewhere off screen. Mouse focus deliberately does not
-move the camera, which is what the `:focus-visible` check in the `focusin`
-handler is for.
-
-**Contrast.** Both themes pass WCAG AA for every text element that is not marked
-`aria-hidden`. If you add colour, use the token split described in the style rules
-above. The quickest check is to walk the rendered text in the console and compare
-each computed colour against its composited background; anything under 4.5:1 for
-normal text or 3:1 for large text needs a `-txt` variant.
+**Contrast.** White text over the sky photo sits on a cobalt wash
+(`.hp-hero-3d::after`); keep it if you change the photo.
 
 ---
 
@@ -211,7 +155,7 @@ Almost always browser cache, not a failed deploy. Verify the deployed commit wit
 the command above first. If it matches, hard reload with `Ctrl+Shift+R`, or append
 a query string such as `https://hackops.tech/?v=2`.
 
-CSS and JS are linked with a version query (for example `site.css?v=desktop-8`).
+CSS and JS are linked with a version query (for example `home.css?v=1`).
 Bump that number when you change those files and need visitors to pick it up
 immediately rather than whenever their cache expires.
 
@@ -322,6 +266,11 @@ in the past.
 ---
 
 ## 7. Running a vote
+
+> **Note (new front page, 2026-11):** the redesigned `index.html` has no slot for
+> the vote widget yet. Before the next in-room vote, add a container for `vote.js`
+> to the page and load the `.vote-*` styles from `site.css` (or move them into
+> `home.css`). `admin.html` works as before.
 
 1. Go to https://hackops.tech/admin.html and sign in.
 2. Add each team by name. This creates the team and its zero tally together.
