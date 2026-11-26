@@ -386,6 +386,44 @@ body { background: #1621bb; }
 .hp-reel-btns button { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--hp-ink); background: #fbfaf7; color: var(--hp-ink); font: 500 18px/1 var(--hp-mono), monospace; cursor: pointer; }
 .hp-reel-btns button:hover { background: var(--hp-ink); color: #ffffff; }
 
+/* ── From the floor: three overlapping 35 mm film strips ── */
+#floor figure { margin: 0; }
+.m11 { overflow: hidden; }
+.m11-bin { position: relative; margin: 46px 0 34px; padding: 44px 0 52px; }
+.m11-strip { position: relative; width: 114vw; margin-left: -8vw; background: #121212; box-shadow: 0 0 0 3px #f4f3ef, 12px 14px 0 rgba(18, 18, 18, 0.85); }
+.m11-a { transform: rotate(-2.6deg); z-index: 1; }
+.m11-b { transform: rotate(1.8deg); z-index: 2; margin-top: -64px; margin-left: -3vw; }
+.m11-c { transform: rotate(-1.2deg); z-index: 3; margin-top: -30px; }
+.m11-holes { height: 24px; padding: 6px 0; background: repeating-linear-gradient(90deg, transparent 0 14px, #f4f3ef 14px 30px, transparent 30px 44px); background-clip: content-box; }
+.m11-track { display: flex; gap: 14px; width: max-content; padding: 8px 14px; animation: m11-drift 80s linear infinite; }
+.m11-b .m11-track { animation: m11-drift-r 60s linear infinite; }
+.m11-c .m11-track { animation-duration: 100s; animation-delay: -45s; }
+@keyframes m11-drift { to { transform: translateX(-50%); } }
+@keyframes m11-drift-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.m11-frame { position: relative; flex: 0 0 auto; width: clamp(240px, 26vw, 400px); padding-top: 18px; }
+.m11-frame img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.m11-edge { position: absolute; top: 2px; left: 0; font: 500 10px var(--hp-mono), monospace; letter-spacing: 0.14em; color: #ff8a1f; }
+.m11-all { display: inline-block; margin-top: 6px; font: 500 12px var(--hp-mono), monospace; letter-spacing: 0.16em; text-transform: uppercase; border-bottom: 1px solid currentColor; }
+
+/* ── Floor gallery (/floor.html): flat strips by op ── */
+.hp-floor-page .floor-head { padding-bottom: clamp(28px, 4vw, 48px); }
+.floor-back { margin: 0 0 28px; font: 500 12px var(--hp-mono), monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+.floor-lede { max-width: 42ch; margin-top: 16px; font-size: 17px; line-height: 1.5; color: var(--hp-grey); }
+.floor-filter { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, #f4f3ef 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hp-line); }
+.floor-filter-in { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 0; }
+.floor-chip { font: 500 11px var(--hp-mono), monospace; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 14px; border: 2px solid var(--hp-ink); background: #fbfaf7; cursor: pointer; }
+.floor-chip.is-on { background: var(--chip-accent, var(--hp-blue)); color: var(--chip-on, #fff); border-color: var(--hp-ink); box-shadow: 4px 4px 0 var(--hp-ink); }
+.floor-op { padding: clamp(36px, 5vw, 56px) 0 12px; border-top: 1px solid var(--hp-line); }
+.floor-op:first-of-type { border-top: 0; }
+.floor-op-head { margin-bottom: 22px; }
+.floor-op-title { font-size: clamp(20px, 2.4vw, 28px); color: var(--op-accent); margin: 0; }
+.floor-op-meta { margin: 10px 0 0; font: 500 11px var(--hp-mono), monospace; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hp-grey); }
+.floor-strip { width: 100%; margin-left: 0; transform: none; box-shadow: none; border-top: 3px solid #f4f3ef; border-bottom: 3px solid #f4f3ef; }
+.floor-track { animation: none; width: 100%; overflow-x: auto; scrollbar-width: thin; }
+.floor-foot { padding: 28px 0 48px; }
+.floor-notice { margin: 0; font-size: 15px; color: var(--hp-grey); }
+.floor-notice a { border-bottom: 1px solid currentColor; }
+
 /* ── The community so far: big number + mono label, ruled list (Tinybird, Institute of Health) ── */
 .hp-tally-wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 .hp-tally { margin: 0; }
@@ -408,6 +446,10 @@ body { background: #1621bb; }
   .hp-w-jam::before { inset: 55% 0 0 0; clip-path: polygon(0 4%, 100% 0, 100% 100%, 0 100%); }
 }
 @media (max-width: 760px) {
+  .m11-bin { margin: 30px 0 22px; padding: 26px 0 32px; }
+  .m11-frame { width: 218px; }
+  .m11-b { margin-top: -40px; }
+  .m11-c { margin-top: -18px; }
   .hp-fork { grid-template-columns: minmax(0, 1fr); }
   .hp-fork-side { min-height: 0; padding: 28px 20px 24px; }
   .hp-fork-build { padding-bottom: 44px; }
@@ -428,6 +470,7 @@ body { background: #1621bb; }
   .hp-tally-row { grid-template-columns: minmax(0, 1fr); grid-template-areas: "num" "text"; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .m11-track { animation: none; }
   .hp-marquee-track { animation: none; }
   .hp-plus, .hp-keyvisual, .hp-fork-row, .hp-fork-arrow, .hp-w, .hp-w-kv img, .hp-win-in { transition: none; }
   .hp a.hp-fork-link:hover .hp-fork-arrow, .hp-w:hover .hp-w-kv img { transform: none; }
