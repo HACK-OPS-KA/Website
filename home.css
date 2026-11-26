@@ -405,6 +405,25 @@ body { background: #1621bb; }
 .m11-edge { position: absolute; top: 2px; left: 0; font: 500 10px var(--hp-mono), monospace; letter-spacing: 0.14em; color: #ff8a1f; }
 .m11-all { display: inline-block; margin-top: 6px; font: 500 12px var(--hp-mono), monospace; letter-spacing: 0.16em; text-transform: uppercase; border-bottom: 1px solid currentColor; }
 
+/* ── Floor gallery (/floor.html): flat strips by op ── */
+.hp-floor-page .floor-head { padding-bottom: clamp(28px, 4vw, 48px); }
+.floor-back { margin: 0 0 28px; font: 500 12px var(--hp-mono), monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+.floor-lede { max-width: 42ch; margin-top: 16px; font-size: 17px; line-height: 1.5; color: var(--hp-grey); }
+.floor-filter { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, #f4f3ef 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hp-line); }
+.floor-filter-in { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 0; }
+.floor-chip { font: 500 11px var(--hp-mono), monospace; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 14px; border: 2px solid var(--hp-ink); background: #fbfaf7; cursor: pointer; }
+.floor-chip.is-on { background: var(--chip-accent, var(--hp-blue)); color: var(--chip-on, #fff); border-color: var(--hp-ink); box-shadow: 4px 4px 0 var(--hp-ink); }
+.floor-op { padding: clamp(36px, 5vw, 56px) 0 12px; border-top: 1px solid var(--hp-line); }
+.floor-op:first-of-type { border-top: 0; }
+.floor-op-head { margin-bottom: 22px; }
+.floor-op-title { font-size: clamp(20px, 2.4vw, 28px); color: var(--op-accent); margin: 0; }
+.floor-op-meta { margin: 10px 0 0; font: 500 11px var(--hp-mono), monospace; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hp-grey); }
+.floor-strip { width: 100%; margin-left: 0; transform: none; box-shadow: none; border-top: 3px solid #f4f3ef; border-bottom: 3px solid #f4f3ef; }
+.floor-track { animation: none; width: 100%; overflow-x: auto; scrollbar-width: thin; }
+.floor-foot { padding: 28px 0 48px; }
+.floor-notice { margin: 0; font-size: 15px; color: var(--hp-grey); }
+.floor-notice a { border-bottom: 1px solid currentColor; }
+
 /* ── The community so far: big number + mono label, ruled list (Tinybird, Institute of Health) ── */
 .hp-tally-wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 .hp-tally { margin: 0; }
