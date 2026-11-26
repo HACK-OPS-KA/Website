@@ -49,6 +49,7 @@ under it and must not be renamed.
 | `firebase-init.js` | Shared Firebase bootstrap and the `EVENT_ID` constant. |
 | `firestore.rules` | Firestore security rules. The real enforcement layer. |
 | `projects.json` | The op//001 project list, as generated in the SLOPATHON repo. |
+| `archive/` | The old camera-world front page, slop museum and photo notice, kept at hackops.tech/archive/ (noindex). Uses `/site.css` and `/assets/` from the root. |
 | `CNAME` | Holds `hackops.tech`. This is what claims the custom domain. Do not delete. |
 | `.nojekyll` | Stops GitHub from running Jekyll over the files. |
 | `serve.ps1` | Local dev server, serves the folder it sits in. |

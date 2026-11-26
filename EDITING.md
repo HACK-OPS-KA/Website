@@ -71,6 +71,12 @@ herlaeuft). Die Hoehe im `style` so waehlen, dass es optisch gleich gross wirkt.
 - Foto-Hinweis (`photos.html`) und Slop Museum (`projects.html`) behalten ihre
   Adressen, Event-Seiten verlinken darauf.
 
+## Die alte Seite
+
+Die alte Desktop-Seite liegt unveraendert unter https://hackops.tech/archive/
+(Ordner `archive/`, fuer Suchmaschinen auf noindex). Der Footer der neuen Seite
+verlinkt sie als "Old site". Dort nichts mehr pflegen.
+
 ## Handy
 
 Unter 760px Breite stapelt sich alles in eine Spalte. Nach jeder Aenderung im
